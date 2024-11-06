@@ -1,143 +1,134 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+<!doctype html>
+<html class="no-js" lang="zxx">
 
-include('smtp/PHPMailerAutoload.php');
 
-function smtp_mailer($to, $subject, $message) {
-    $mail = new PHPMailer();
-    $mail->IsSMTP();
-    $mail->SMTPAuth = true;
-    $mail->SMTPSecure = 'tls';
-    $mail->Host = "smtp.gmail.com";
-    $mail->Port = 587;
-    $mail->IsHTML(true);
-    $mail->CharSet = 'UTF-8';
-    $mail->Username = "jadhavaryan467@gmail.com"; // Your email
-    $mail->Password = "oozzyqfwnpufjuqi"; // Your email password
-    $mail->SetFrom("jadhavaryan467@gmail.com"); // Your email
-    $mail->Subject = $subject;
-    $mail->Body = $message;
-    $mail->AddAddress($to);
-    $mail->SMTPOptions = array('ssl' => array(
-        'verify_peer' => false,
-        'verify_peer_name' => false,
-        'allow_self_signed' => false
-    ));
-    
-    return $mail->Send() ? 'Sent' : $mail->ErrorInfo;
-}
+	        <!-- footer and js files -->
+            <?php include("header.php"); ?>
+	
+		<!-- Breadcrumbs -->
+		<div class="breadcrumbs overlay">
+			<div class="container">
+				<div class="bread-inner">
+					<div class="row">
+						<div class="col-12">
+							<h2>Contact Us</h2>
+							<ul class="bread-list">
+								<li><a href="index.html">Home</a></li>
+								<li><i class="icofont-simple-right"></i></li>
+								<li class="active">Contact Us</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Breadcrumbs -->
+				
+		<!-- Start Contact Us -->
+		<section class="contact-us section">
+			<div class="container">
+				<div class="inner">
+					<div class="row"> 
+						<div class="col-lg-6">
+							<div class="contact-us-left">
+								<!--Start Google-map -->
+								<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15286.692787943426!2d74.23607478060431!3d16.693229244220454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc1003e8dd18f77%3A0x8145dfbd008c138d!2sRajarampuri%2C%20Kolhapur%2C%20Maharashtra%2C%20India!5e0!3m2!1sen!2sus!4v1730382739518!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $mailid = $_POST['email'];
-    
-    $name = $_POST['name'];
-    $phone = $_POST['phone'];
-   
-    $subject = $_POST['subject'];
-    $det = $_POST['message'];
-    
-    $message = "
-    <html>
-    <head>
-        <title>New Mail Enquiry</title>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; }
-            .container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-            h2 { color: #333; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            .footer { margin-top: 20px; font-size: 0.9em; color: #777; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <h2>New Enquiry from $mailid</h2>
-            <table>
-                <tr>
-                    <th>Patient Information</th>
-                   
-                </tr>
-                <tr>
-                    <td>
-                        <p><strong>Name:</strong> $name</p>
-                        <p><strong>Phone:</strong> $phone</p>
-                    </td>
-                
-                </tr>
-                <tr>
-                    <th colspan='2'>Details</th>
-                </tr>
-                <tr>
-                    <td colspan='2'>
-                    
-                        <p><strong>Details from patient:</strong> $det</p>
-                    </td>
-                </tr>
-            </table>
-            <div class='footer'>
-                <p>This email was sent from your website Appointment form.</p>
-            </div>
-        </div>
+								<!--/End Google-map -->
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="contact-us-form">
+								<h2>Contact With Us</h2>
+								<p>If you have any questions please fell free to contact with us.</p>
+								<!-- Form -->
+								<form class="form" method="post" action="contact.php">
+									<div class="row">
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="text" name="name" id="name" placeholder="Name" required="">
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="email" name="email" id="email" placeholder="Email" required="">
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="text" name="phone" id="phone" placeholder="Phone" required="">
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="text" name="subject" id="subject" placeholder="Subject" required="">
+											</div>
+										</div>
+										<div class="col-lg-12">
+											<div class="form-group">
+												<textarea name="message" id="message" placeholder="Your Message" required=""></textarea>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="form-group login-btn">
+												<button class="btn" type="submit">Send</button>
+											</div>
+											
+										</div>
+									</div>
+								</form>
+								<!--/ End Form -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="contact-info">
+					<div class="row">
+						<!-- single-info -->
+						<div class="col-lg-4 col-12 ">
+							<div class="single-info">
+								<i class="icofont icofont-ui-call"></i>
+								<div class="content">
+									<h3>+91 91587 48122</h3>
+									<p>asksameer@gmail.com</p>
+								</div>
+							</div>
+						</div>
+						<!--/End single-info -->
+						<!-- single-info -->
+						<div class="col-lg-4 col-12 ">
+							<div class="single-info">
+								<i class="icofont-google-map"></i>
+								<div class="content">
+									<h3></h3>
+									<p></p>
+								</div>
+							</div>
+						</div>
+						<!--/End single-info -->
+						<!-- single-info -->
+						<div class="col-lg-4 col-12 ">
+							<div class="single-info">
+								<i class="icofont icofont-wall-clock"></i>
+								<div class="content">
+									<h3>Mon - Sat: 8am - 5pm</h3>
+									<p>Sunday Closed</p>
+								</div>
+							</div>
+						</div>
+						<!--/End single-info -->
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--/ End Contact Us -->
+		
+
+
+
+        <!-- footer and js files -->
+         <?php include("footer.php"); ?>
+
+
     </body>
-    </html>
-    ";
-    
-    $to = 'aryanjadhav686@gmail.com';
-    $result = smtp_mailer($to, $subject, $message);
-
-    // Modal trigger script
-    echo "
-    <!DOCTYPE html>
-    <html lang='en'>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' rel='stylesheet'>
-        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
-    </head>
-    <body>
-    ";
-
-    if ($result === 'Sent') {
-        echo "
-        <div class='modal fade' id='successModal' tabindex='-1' role='dialog' aria-labelledby='successModalLabel' aria-hidden='true'>
-            <div class='modal-dialog' role='document'>
-                <div class='modal-content'>
-                    <div class='modal-header'>
-                        <h5 class='modal-title' id='successModalLabel'>Appointment Confirmation</h5>
-                        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                            <span aria-hidden='true'>&times;</span>
-                        </button>
-                    </div>
-                    <div class='modal-body text-center'>
-                        <i class='fas fa-check-circle' style='font-size: 50px; color: #1A76D1;'></i>
-                        <p>Your Enquiry mail has been sent successfully!</p>
-                    </div>
-                    <div class='modal-footer'>
-                        <button type='button' class='btn btn-secondary' onclick=\"window.location.href='contact.html';\">Back</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script src='https://code.jquery.com/jquery-3.5.1.slim.min.js'></script>
-        <script src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js'></script>
-        <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'></script>
-        <script>
-            $(document).ready(function() {
-                $('#successModal').modal('show');
-            });
-        </script>
-        ";
-    } 
-	else {
-        echo "<script>alert('Mail sending failed: " . $result . "');</script>";
-    }
-
-    echo "
-    </body>
-    </html>
-    ";
-}
-?>
+</html>
