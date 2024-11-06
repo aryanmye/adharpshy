@@ -133,7 +133,7 @@ function getInitials($name) {
                                              }
                                               ?></p>
                      
-                      <button class="btn btn-outline-primary">My Application status</button>
+                      <button class="btn btn-outline-primary">My Appplication status</button>
                       <?php
                 if($_SESSION==true)
                 {
