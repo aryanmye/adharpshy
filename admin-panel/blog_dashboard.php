@@ -47,56 +47,63 @@ $rowCount = mysqli_num_rows($que2);
     <section class="content">
         <div class="body_scroll">
             <div class="container">
-                <div class="row">
-                    <?php if ($rowCount > 0): ?>
-                        <?php while ($row2 = mysqli_fetch_assoc($que2)): ?>
-                            <div class="col-lg-6 col-md-12 mb-4"> <!-- Add margin bottom for spacing -->
-                                <div class="card">
-                                    <div class="blogitem mb-5">
-                                        <div class="blogitem-image">
-                                            <a href="blog-details.html">
-                                                <?php $imgSrc = "upload/{$row2['image']}"; ?>
-                                                <img src="<?= $imgSrc ?>" alt="blog image" class="img-fluid"> <!-- Make the image responsive -->
-                                            </a>
-                                            <span class="blogitem-date"><?= $row2['publish_date'] ?></span>
-                                        </div>
-                                        <div class="blogitem-content p-3"> <!-- Add padding for content -->
-                                            <div class="blogitem-header">
-                                                <div class="blogitem-meta">
-                                                    <span><i class="zmdi zmdi-account"></i> By <a href="javascript:void(0);"><?= $row2['author'] ?></a></span>
-                                                </div>
-                                            </div>
-                                            <h5><a href="blog-details.html"><?= $row2['title'] ?></a></h5>
-                                            <p><?= $row2['content'] ?></p>
-
-                                            <?php if (!$row2['is_enabled']): ?>
-                                                <div class="alert alert-warning" role="alert">
-                                                    This blog is disabled.
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <form method="POST" action="toggle_blog.php" style="display:inline;">
-                                                <input type="hidden" name="blog_id" value="<?= $row2['blog_id'] ?>">
-                                                <button type="submit" class="btn btn-toggle <?= $row2['is_enabled'] ? 'btn-success' : 'btn-danger' ?>">
-                                                    <?= $row2['is_enabled'] ? 'Disable Blog' : 'Enable Blog' ?>
-                                                </button>
-                                            </form>
-
-                                            <a href="blog-details.html" class="btn btn-info">Read More</a>
-                                            <a href="del_blog.php?id=<?= $row2['blog_id'] ?>" class="btn btn-danger">Delete Blog</a> <!-- Ensure this ID is correct -->
+                <!-- Display session messages -->
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-info">
+                <?= htmlspecialchars($_SESSION['message']) ?>
+            </div>
+            <?php unset($_SESSION['message']); ?>
+        <?php endif; ?>
+        <div class="row">
+            <?php if ($rowCount > 0): ?>
+                <?php while ($row2 = mysqli_fetch_assoc($que2)): ?>
+                    <div class="col-lg-6 col-md-12 mb-4">
+                        <div class="card">
+                            <div class="blogitem mb-5">
+                                <div class="blogitem-image">
+                                    <a href="blog-details.php?id=<?= htmlspecialchars($row2['blog_id']) ?>">
+                                        <?php $imgSrc = "upload/" . htmlspecialchars($row2['image']); ?>
+                                        <img src="<?= $imgSrc ?>" alt="blog image" class="img-fluid">
+                                    </a>
+                                    <span class="blogitem-date"><?= htmlspecialchars($row2['publish_date']) ?></span>
+                                </div>
+                                <div class="blogitem-content p-3">
+                                    <div class="blogitem-header">
+                                        <div class="blogitem-meta">
+                                            <span><i class="zmdi zmdi-account"></i> By <a href="javascript:void(0);"><?= htmlspecialchars($row2['author']) ?></a></span>
                                         </div>
                                     </div>
+                                    <h5><a href="blog-details.php?id=<?= htmlspecialchars($row2['blog_id']) ?>"><?= htmlspecialchars($row2['title']) ?></a></h5>
+                                    <?= htmlspecialchars(substr($row2['content'], 0, 150)) ?>...
+
+                                    <?php if (!$row2['is_enabled']): ?>
+                                        <div class="alert alert-warning" role="alert">
+                                            This blog is disabled.
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Toggle Button Form -->
+                                    <a href="toggle_blog.php?blog_id=<?= $row2['blog_id'] ?>&current_status=<?= $row2['is_enabled'] ?>" 
+   class="btn <?= $row2['is_enabled'] ? 'btn-danger' : 'btn-success' ?>">
+    <?= $row2['is_enabled'] ? 'Disable Blog' : 'Enable Blog' ?>
+</a>
+
+
+                                    <a href="blog-details.php?id=<?= htmlspecialchars($row2['blog_id']) ?>" class="btn btn-info">Read More</a>
+                                    <a href="del_blog.php?id=<?= htmlspecialchars($row2['blog_id']) ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this blog?');">Delete Blog</a>
                                 </div>
                             </div>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <div class="col-lg-12">
-                            <div class="alert alert-warning" role="alert">
-                                No blogs found.
-                            </div>
                         </div>
-                    <?php endif; ?>
+                    </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <div class="col-lg-12">
+                    <div class="alert alert-warning" role="alert">
+                        No blogs found.
+                    </div>
                 </div>
+            <?php endif; ?>
+        </div>
             </div>
         </div>
     </section>

@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $destination = "upload/" . $filename;
 
     if ($size <= 20000000 && move_uploaded_file($tmpname, $destination)) {
-        $sql = "INSERT INTO blogs (title, author, category, content, image, display) 
+        $sql = "INSERT INTO blogs (title, author, category, content, image, is_enabled) 
                 VALUES ('$title', '$author', '$category', '$content', '$filename', '1')";
 
         if (mysqli_query($conn, $sql)) {
