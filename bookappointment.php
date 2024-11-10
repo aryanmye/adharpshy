@@ -100,6 +100,7 @@
 
 	<!-- footer and js files are included -->
 	<?php include("footer.php"); ?>
+	
 
     </body>
 </html>

@@ -1,6 +1,16 @@
 ﻿<?php
 include "connection.php";
+
+// Check if user is logged in (assuming session variable 'user_id' or 'logged_in' is set on successful login)
+if (!isset($_SESSION['admin_id']) || !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    // Redirect to sign-in.php if user is not logged in
+    header("Location: sign-in.php");
+    exit(); // Make sure no further code is executed after the redirect
+}
+
+
 ?>
+
 <!doctype html>
 
 <html class="no-js " lang="en">
@@ -28,10 +38,6 @@ include "connection.php";
 <!-- Overlay For Sidebars -->
 <div class="overlay"></div>
 
-
-
-
-
 <!-- Left Sidebar -->
 <?php
 include 'leftaside.php';
@@ -49,11 +55,11 @@ include 'leftaside.php';
                     <h6>Theme Option</h6>
                     <div class="light_dark">
                         <div class="radio">
-                            <input type="radio" name="radio1" id="lighttheme" value="light" checked="">
+                            <input type="radio" name="radio1" id="lighttheme" value="light" checked=""/>
                             <label for="lighttheme">Light Mode</label>
                         </div>
                         <div class="radio mb-0">
-                            <input type="radio" name="radio1" id="darktheme" value="dark">
+                            <input type="radio" name="radio1" id="darktheme" value="dark"/>
                             <label for="darktheme">Dark Mode</label>
                         </div>
                     </div>
@@ -69,12 +75,8 @@ include 'leftaside.php';
                         <li data-theme="blush" class="active"><div class="blush"></div></li>
                     </ul>                                        
                 </div>
-                        
             </div>                
         </div>       
-        
-            </div>
-        </div>
     </div>
 </aside>
 
@@ -100,59 +102,76 @@ include 'leftaside.php';
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card widget_2 big_icon traffic">
+                    <div class="card widget_2 big_icon ">
                         <div class="body">
-                            <h6>Traffic</h6>
-                            <h2>20 <small class="info">of 1Tb</small></h2>
-                            <small>2% higher than last month</small>
-                            <div class="progress">
-                                <div class="progress-bar l-amber" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;"></div>
-                            </div>
+                            <h6>This Month's Traffic</h6>
+                            <h2  class="traffic-count h2 font-weight-bold mb-0" >Loading...</h2> <!-- Add this ID for dynamic updates -->
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card widget_2 big_icon sales">
+                    <div class="card widget_2 big_icon ">
                         <div class="body">
-                            <h6>Sales</h6>
-                            <h2>12% <small class="info">of 100</small></h2>
-                            <small>6% higher than last month</small>
-                            <div class="progress">
-                                <div class="progress-bar l-blue" role="progressbar" aria-valuenow="38" aria-valuemin="0" aria-valuemax="100" style="width: 38%;"></div>
-                            </div>
+                            <h6>Today's Traffic</h6>
+                            <h2  class="traffic-counttoday h2 font-weight-bold mb-0" >Loading...</h2> <!-- Add this ID for dynamic updates -->
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card widget_2 big_icon email">
+                    <div class="card widget_2 big_icon ">
                         <div class="body">
-                            <h6>Email</h6>
-                            <h2>39 <small class="info">of 100</small></h2>
-                            <small>Total Registered email</small>
-                            <div class="progress">
-                                <div class="progress-bar l-purple" role="progressbar" aria-valuenow="39" aria-valuemin="0" aria-valuemax="100" style="width: 39%;"></div>
-                            </div>
+                            <h6>This Year's Traffic</h6>
+                            <h2  class="traffic-countyearly h2 font-weight-bold mb-0" >Loading...</h2> <!-- Add this ID for dynamic updates -->
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card widget_2 big_icon domains">
+                    <div class="card widget_2 big_icon Blog">
                         <div class="body">
-                            <h6>Domains</h6>
-                            <h2>8 <small class="info">of 10</small></h2>
-                            <small>Total Registered Domain</small>
-                            <div class="progress">
-                                <div class="progress-bar l-green" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100" style="width: 89%;"></div>
-                            </div>
+                            <h6>Blogs</h6>
+                            <?php
+                      $que="SELECT blog_id from blogs ORDER BY blog_id" ;
+                      $run=mysqli_query($conn,$que);
+                      $blog_row=mysqli_num_rows($run);
+                      echo '<h2>'.$blog_row.'</h2>';
+
+                      ?>
                         </div>
                     </div>
                 </div>
-            </div>
-           
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="card widget_2 big_icon pen">
+                        <div class="body">
+                            <h6>Services</h6>
+                            <?php
+                      $que="SELECT service_id from services ORDER BY service_id" ;
+                      $run=mysqli_query($conn,$que);
+                      $service_row=mysqli_num_rows($run);
+                       echo '<h2>'.$service_row.'</h2>';
+
+                      ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="card widget_2 big_icon">
+                        <div class="body">
+                            <h6>Cities</h6>
+                            <?php
+                      $que="SELECT city_id from cities ORDER BY city_id" ;
+                   $run=mysqli_query($conn,$que);
+                       $city_row=mysqli_num_rows($run);
+                       echo '<h2>'.$city_row.'</h2>';
+
+                      ?> 
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
 
 
 <!-- Jquery Core Js --> 
@@ -165,7 +184,9 @@ include 'leftaside.php';
 
 <script src="assets/bundles/mainscripts.bundle.js"></script>
 <script src="assets/js/pages/index.js"></script>
+<script src="traffic.js"></script>
+<script src="traffictoday.js"></script>
+<script src="trafficyearly.js"></script>
 </body>
-
 
 </html>

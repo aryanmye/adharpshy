@@ -26,18 +26,12 @@
 										<ul>
 											<li><a href="index.html"><i class="fa fa-caret-right" aria-hidden="true"></i>Home</a></li>
 											<li><a href="aboutus.html"><i class="fa fa-caret-right" aria-hidden="true"></i>About Us</a></li>
-											<li><a href="services.html"><i class="fa fa-caret-right" aria-hidden="true"></i>Services</a></li>
-												
+											<li><a href="services.php"><i class="fa fa-caret-right" aria-hidden="true"></i>Services</a></li>
+											<li><a href="blogs.php"><i class="fa fa-caret-right" aria-hidden="true"></i>Blogs</a></li>
+											<li><a href="contact.php"><i class="fa fa-caret-right" aria-hidden="true"></i>Contact Us</a></li>
 										</ul>
 									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<ul>
-								
-											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Testimonials</a></li>
-										
-											<li><a href="contact.html"><i class="fa fa-caret-right" aria-hidden="true"></i>Contact Us</a></li>	
-										</ul>
-									</div>
+									
 								</div>
 							</div>
 						</div>
@@ -46,10 +40,20 @@
 								<h2>Open Hours</h2>
 							
 								<ul class="time-sidual">
-									<li class="day">Monday - Friday <span>8.00-20.00</span></li>
-									<li class="day">Saturday <span>9.00-18.30</span></li>
-									<li class="day">Monday - Thusday <span>9.00-15.00</span></li>
+									<li class="day">Morning<span> 10:00 AM to 12:30 PM</span></li>
+									<li class="day">Evening <span>5:30 PM to 8:00 PM</span></li>
+									
 								</ul>
+							</div>
+						</div>
+
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer">
+								<h2>Address</h2>
+								<p>Dr. Ravindra Patil,
+Adhar Neurospsychiatric Center
+1101, First Floor, Karvir Hospital, Above Raymond Showroom, Shahpuri, Kolhapur</p>
+								
 							</div>
 						</div>
 						
@@ -113,3 +117,6 @@
 		<script src="js/bootstrap.min.js"></script>
 		<!-- Main JS -->
 		<script src="js/main.js"></script>
+		<script src="traffic.js"></script>
+<script src="traffictoday.js"></script>
+<script src="trafficyearly.js"></script>

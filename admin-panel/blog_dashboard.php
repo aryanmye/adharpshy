@@ -89,7 +89,7 @@ $rowCount = mysqli_num_rows($que2);
 </a>
 
 
-                                    <a href="blog-details.php?id=<?= htmlspecialchars($row2['blog_id']) ?>" class="btn btn-info">Read More</a>
+                                    <a href="../blog-single.php?title=<?= htmlspecialchars($row2['title']) ?>" class="btn btn-info">Read More</a>
                                     <a href="del_blog.php?id=<?= htmlspecialchars($row2['blog_id']) ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this blog?');">Delete Blog</a>
                                 </div>
                             </div>

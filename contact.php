@@ -96,23 +96,25 @@
 						</div>
 						<!--/End single-info -->
 						<!-- single-info -->
-						<div class="col-lg-4 col-12 ">
-							<div class="single-info">
-								<i class="icofont-google-map"></i>
-								<div class="content">
-									<h3></h3>
-									<p></p>
-								</div>
-							</div>
-						</div>
+						<div class="col-lg-4 col-12">
+    <div class="single-info" style="height:230px;">
+        <i class="icofont-google-map"></i>
+        <div class="content">
+            <h3>Shahupuri , Kolhapur</h3>
+            <p>Adhar Neurospsychiatric Center 1101, First Floor, Karvir Hospital, Above Raymond Showroom</p>
+        </div>
+    </div>
+</div>
+
 						<!--/End single-info -->
 						<!-- single-info -->
 						<div class="col-lg-4 col-12 ">
 							<div class="single-info">
 								<i class="icofont icofont-wall-clock"></i>
 								<div class="content">
-									<h3>Mon - Sat: 8am - 5pm</h3>
-									<p>Sunday Closed</p>
+									<h3>Morning : 10:00 AM to 12:30 PM</h3>
+									<h3>Evening :  5:30 PM to 8:00 PM</h3>
+									
 								</div>
 							</div>
 						</div>
@@ -128,6 +130,9 @@
 
         <!-- footer and js files -->
          <?php include("footer.php"); ?>
+		 <script src="traffic.js"></script>
+<script src="traffictoday.js"></script>
+<script src="trafficyearly.js"></script>
 
 
     </body>

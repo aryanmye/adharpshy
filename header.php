@@ -51,6 +51,7 @@ include 'connection.php';
 		{
 			scroll-behavior: smooth;
 		}
+		
 	</style>
     <body>
 	
@@ -104,14 +105,14 @@ include 'connection.php';
 								<div class="main-menu">
 									<nav class="navigation">
 										<ul class="nav menu">
-											<li class="active"><a href="index.php">Home</a></li>
+											<li class="active"><a href="index.html">Home</a></li>
 											
 											
 											<li><a href="services.php">Services </a></li>
 											
 						
 											</li>
-											<li><a href="#blog">Blogs </a>
+											<li><a href="blogs.php">Blogs </a>
 												
 											</li>
 											<li><a href="contact.php">Contact Us</a></li>
