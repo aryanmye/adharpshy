@@ -16,8 +16,8 @@
             <li><a href="index.php"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
             <li><a href="blog-post.php"><i class="zmdi zmdi-blogger"></i><span>Add Blog</span></a></li>
             <li><a href="blog_dashboard.php"><i class="zmdi zmdi-assignment"></i><span>Blogs Dashboard</span></a></li>
-            <li><a href="add_service.php" ><i class="zmdi zmdi"></i><span>Add Services</span></a></li>
-            <li><a href="add_city.php"><i class="zmdi zmdi-city"></i><span>Add City</span></a></li>            
+            <li><a href="add_city.php"><i class="zmdi zmdi-city"></i><span>Add City</span></a></li>   
+            <li><a href="add_service.php" ><i class="zmdi zmdi"></i><span>Add Services</span></a></li>         
             <li><a href="manage_services.php" ><i class="zmdi zmdi-border-color"></i><span>Manage Services</span></a></li>            
             <li><a href="manage_cities.php" ><i class="zmdi zmdi-city"></i><span>Manage Cities</span></a></li>
            
