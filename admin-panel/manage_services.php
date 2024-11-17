@@ -6,7 +6,6 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
 ?>
 
 <!doctype html>
@@ -35,81 +34,90 @@ if ($conn->connect_error) {
                 <div class="container">
                     <!-- Display session messages -->
 
-                    <?php // Query to fetch all table names from the 'cities' database
-$sql1 = "SHOW TABLES";
-$tablesResult = mysqli_query($conn, $sql1);
+                    <?php
+                    // Query to fetch all table names from the 'cities' database
+                    $sql1 = "SHOW TABLES";
+                    $tablesResult = mysqli_query($conn, $sql1);
 
-// Check if the query was successful
-if ($tablesResult === false) {
-    echo "Error executing query: " . mysqli_error($conn);
-    exit();
-}
+                    // Check if the query was successful
+                    if ($tablesResult === false) {
+                        echo "Error executing query: " . mysqli_error($conn);
+                        exit();
+                    }
 
-// Loop through the tables and fetch data dynamically
-while ($tableRow = mysqli_fetch_assoc($tablesResult)) {
-    $tableName = $tableRow['Tables_in_' . $dbname];  // Table name (e.g., 'nagpur')
+                    // Loop through the tables and fetch data dynamically
+                    while ($tableRow = mysqli_fetch_assoc($tablesResult)) {
+                        $tableName = $tableRow['Tables_in_' . $dbname];  // Table name (e.g., 'nagpur')
 
-    // Query to fetch data from each table
-    $sql2 = "SELECT * FROM `$tableName` ORDER BY `created_at` DESC";
-    $que2 = mysqli_query($conn, $sql2);
+                        // Query to fetch data from each table
+                        $sql2 = "SELECT * FROM `$tableName` ORDER BY `created_at` DESC";
+                        $que2 = mysqli_query($conn, $sql2);
 
-    // Check if the query was successful
-    if ($que2 === false) {
-        echo "Error executing query for table $tableName: " . mysqli_error($conn);
-        continue;
-    }
+                        // Check if the query was successful
+                        if ($que2 === false) {
+                            echo "Error executing query for table $tableName: " . mysqli_error($conn);
+                            continue;
+                        }
 
-    // Check the number of rows returned
-    $rowCount = mysqli_num_rows($que2);
-    if ($rowCount > 0) {
-        
-        echo "<h3 class='text-center mb-4'>Services in " . ucfirst($tableName) . "</h3>";  // Display the table name as the heading
-        echo "<div class='row'>";
-        while ($row2 = mysqli_fetch_assoc($que2)) {
-            // Concatenate the image path
-            $imgSrc = "upload/" . htmlspecialchars($row2['image_path']);
-         
-            echo "
-<div class='col-lg-3 col-md-4 col-sm-6 m-1'>
-    <div class='card'>
-        <div class='blogitem mb-5'>
-            <div class='blogitem-image'>
-                <a href='city-details.php?id=" . htmlspecialchars($row2['id']) . "'>
-                    <img src='$imgSrc' alt='service image' class='img-fluid'>
-                </a>
-            </div>
-            <div class='blogitem-content p-3'>
-                <h5><a href='city-details.php?id=" . htmlspecialchars($row2['id']) . "'>" . htmlspecialchars($row2['area_name']) . "</a></h5>
-                <p>" . htmlspecialchars(substr($row2['created_at'], 0, 150)) . "...</p>
-                <h6>" . htmlspecialchars(substr($row2['service'], 0, 150)) . "...</h6>
-                <p>" . htmlspecialchars(substr($row2['service_title'], 0, 150)) . "...</p>
-                <div class='d-flex justify-content-between'>
-                    <a href='city-details.php?id=" . htmlspecialchars($row2['id']) . "' class='btn btn-info btn-sm'>Read More</a>
-                    <a href='del_service.php?id=" . htmlspecialchars($row2['id']) . "' class='btn btn-danger btn-sm' onclick='return confirm(\"Are you sure you want to delete this service?\");'>Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>";
-        }
-        echo "</div>";  // End of row
-    } else {
-        echo "<div class='col-lg-12'>
-                <div class='alert alert-warning' role='alert'>
-                    No services found in the $tableName table.
-                </div>
-              </div>";
-    }
-}
+                        // Check the number of rows returned
+                        $rowCount = mysqli_num_rows($que2);
+                        if ($rowCount > 0) {
+                            echo "<h3 class='text-center mb-4'>Services in " . ucfirst($tableName) . "</h3>";  // Display the table name as the heading
+                            echo "<div class='row'>";
+                            while ($row2 = mysqli_fetch_assoc($que2)) {
+                                // Concatenate the image path
+                                $imgSrc = "upload/" . htmlspecialchars($row2['image_path']);
+                                $cityName = isset($row2['city_name']) ? urlencode($row2['city_name']) : 'unknown_city';
 
-$conn->close();
-?>
+                                echo "
+                                <div class='col-lg-3 col-md-4 col-sm-6 m-1'>
+                                    <div class='card'>
+                                        <div class='blogitem mb-5'>
+                                            <div class='blogitem-image'>
+                                                <a href='../services.php?id=" . htmlspecialchars($row2['id']) . "'>
+                                                    <img src='$imgSrc' alt='service image' class='img-fluid'>
+                                                </a>
+                                            </div>
+                                            <div class='blogitem-content p-3'>
+                                                <h5><a href='../services.php?id=" . htmlspecialchars($row2['id']) . "'>" . htmlspecialchars($row2['area_name']) . "</a></h5>
+                                                <p>" . htmlspecialchars(substr($row2['created_at'], 0, 150)) . "...</p>
+                                                <h6>" . htmlspecialchars(substr($row2['service'], 0, 150)) . "...</h6>
+                                                <p>" . htmlspecialchars(substr($row2['service_title'], 0, 150)) . "...</p>
+                                                <div class='d-flex justify-content-between'>
+                                                    <a href='../services.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "&created_at=" . urlencode($row2['created_at']) . "' class='btn btn-info btn-sm'>Read More</a>
+                                                    <a href='del_service.php?db=cities&table=" . urlencode($tableName) . "&id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "' 
+                                                       class='btn btn-danger btn-sm' 
+                                                       onclick='return confirm(\"Are you sure you want to delete this service?\");'>Delete</a>
+                                                    <a href='toggle_service.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "&created_at=" . urlencode($row2['created_at']) . "&table=" . urlencode($tableName) . "' 
+                                                       class='btn btn-warning btn-sm toggle-service' data-service-id='" . htmlspecialchars($row2['id']) . "'>
+                                                        " . ($row2['is_enabled'] == 1 ? 'Disable' : 'Enable') . "
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>";
+                            }
+                            echo "</div>";  // End of row
+                        } else {
+                            echo "<div class='col-lg-12'>
+                                    <div class='alert alert-warning' role='alert'>
+                                        No services found in the $tableName table.
+                                    </div>
+                                  </div>";
+                        }
+                    }
+
+                    $conn->close();
+                    ?>
+
                     <?php if (isset($_SESSION['message'])): ?>
                         <div class="alert alert-info">
                             <?= htmlspecialchars($_SESSION['message']) ?>
                         </div>
                         <?php unset($_SESSION['message']); ?>
                     <?php endif; ?>
+
                 </div>
             </div>
         </section>

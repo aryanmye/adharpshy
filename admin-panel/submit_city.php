@@ -20,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         service_title VARCHAR(255),
         service_discription TEXT,
         image_path VARCHAR(255),
+        is_enabled BINARY(1) DEFAULT 1 NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
 

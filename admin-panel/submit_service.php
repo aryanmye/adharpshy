@@ -9,8 +9,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
-
 // Handling the form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
@@ -19,12 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $service_title = $_POST['service_title'];
     $service = $_POST['service'];
     $service_discription = $_POST['service_discription'];
+    $is_enabled = isset($_POST['is_enabled']) ? 1 : 0; // Default to 1 if not provided
     
     // Image upload handling
     $filename = $_FILES['image']['name'];
     $tmpname = $_FILES['image']['tmp_name'];
     $size = $_FILES['image']['size'];
-    $destination = "upload/" . $filename;
+    $destination = $filename;
 
     if ($size <= 20000000 && move_uploaded_file($tmpname, $destination)) {
         // Insert data into the selected city's table
@@ -32,10 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // SQL query to insert data into the selected city's table (category)
         $sql = "INSERT INTO `$category` (area_name, service_title, service_discription, service, image_path)
-                VALUES ('$area_name', '$service_title', '$service', '$service_discription', '$destination')";
+                VALUES ('$area_name', '$service_title', '$service_discription', '$service', '$destination')";
 
         if (mysqli_query($conn, $sql)) {
-            echo "New blog post created successfully!";
+            echo "New Service added successfully!";
         } else {
             echo "Error: " . mysqli_error($conn);
         }
@@ -44,6 +43,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Failed to upload image or image size exceeds 20MB.";
     }
 }
-
-
 ?>

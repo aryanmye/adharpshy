@@ -1,4 +1,3 @@
-
 <?php
 $servername = "localhost";
 $username = "root";
@@ -12,10 +11,15 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+// Fetch all table names in the database
+$sql = "SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '$dbname'";
+$tables_result = $conn->query($sql);
+
+// $tableName = isset($_GET['table']) ? $_GET['table'] : 'nagpur'; // Default to 'nagpur' if no table is specified
+// $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1"; // Fetch only enabled services
+// $result = $conn->query($sql);
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -135,14 +139,14 @@ if ($conn->connect_error) {
 								<div class="main-menu">
 									<nav class="navigation">
 										<ul class="nav menu">
-											<li class="active"><a href="index.php">Home</a></li>
+											<li class="active"><a href="index.html">Home</a></li>
 											
 											
 											<li><a href="services.php">Services </a></li>
 											
 						
 											</li>
-											<li><a href="#blog">Blogs </a>
+											<li><a href="blogs.php">Blogs </a>
 												
 											</li>
 											<li><a href="contact.php">Contact Us</a></li>
@@ -165,96 +169,125 @@ if ($conn->connect_error) {
 		</header>
 		<!-- End Header Area -->
 </head>
+
 <body>
-<section class="news-single section"> 
+<section class="services section" id="services">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-12">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="single-main">
-                            <?php
-                                $sql = "SELECT * FROM kolhapur";
-                                $result = $conn->query($sql);
-
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                            ?>
-                            <!-- Display Data -->
-                            <div class="news-head">
-                                <img src="img/blog1.jpg" alt="#">
-                            </div>
-                            <h1 class="news-title">
-                                <a href="news-single.html"><?php echo $row['service_title']; ?></a>
-                            </h1>
-                            <div class="meta">
-                                <div class="meta-left"></div>
-                            </div>
-                            <div class="news-text">
-                                <h2><?php echo $row['service1_head']; ?></h2>
-                                <h2><?php echo $row['service2_head']; ?></h2>
-                                <h2><?php echo $row['service3_head']; ?></h2>
-                                <h2><?php echo $row['service4_head']; ?></h2>
-                                <p><?php echo $row['service_discription']; ?></p>
-                                <div class="image-gallery">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-12">
-                                            <div class="single-image">
-                                                <img src="img/blog2.jpg" alt="#">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-12">
-                                            <div class="single-image">
-                                                <img src="img/blog3.jpg" alt="#">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Loop -->
-                            <?php
-                                    }
-                                } else {
-                                    echo "<p>No data available</p>";
-                                }
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Sidebar for Cities -->
-            <div class="col-lg-4 col-12">
-                <div class="main-sidebar">
-                    <div class="single-widget category">
-                        <h3 class="title">Cities</h3>
-                        <ul class="categor-list">
-                            <li>
-                                <a href="#">Kolhapur <i class="icofont-rounded-down"></i></a>
-                                <ul class="dropdown">
-                                    <?php
-                                        $sql = "SELECT area_name FROM kolhapur";
-                                        $result = $conn->query($sql);
-
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo "<li><a href='#'>" . $row['area_name'] . "</a></li>";
-                                            }
-                                        }
-                                    ?>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-lg-12">
+                <div class="section-title text-center">
+                    <h2>Explore Our Comprehensive Services</h2>
+                    <img src="img/section-img.png" alt="#" class="img-fluid">
                 </div>
             </div>
         </div>
+        <div class="row">
+            <?php
+            if ($tables_result->num_rows > 0) {
+                while ($table = $tables_result->fetch_assoc()) {
+                    $tableName = $table['table_name'];
+                    ?>
+                    <!-- Display table name as the section header -->
+                    <div class="col-12">
+                        <h5 class="table-name-title text-center"><?php echo htmlspecialchars($tableName); ?> Services</h5><hr>
+                    </div>
+                    <?php
+
+                    // Get the services from each table where `is_enabled` is 1
+                    $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
+                    $result = $conn->query($sql);
+
+                    // Display results for each table
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $imgSrc = "upload/" . htmlspecialchars($row['image_path']);
+                            ?>
+                            <div class="col-lg-4 col-md-6 col-12 mb-4">
+                                <div class="card shadow-sm border-light">
+							    <div class="service-head">
+							        <?php 
+							            if (!empty($imgSrc)) {
+							                // If $imgSrc is not empty, display the image from $imgSrc
+							                echo '<img src="' . $imgSrc . '" alt="Service Image" class="card-img-top img-fluid">';
+							            } else {
+							                // If $imgSrc is empty, display the default image
+							                echo '<img src="img/empty_image.jpg" alt="Default Service Image" class="card-img-top img-fluid" style="width: 348px;height: 293px;">';
+							            }
+							        ?>
+							    </div>
+
+
+                                    <div class="card-body">
+									<div class="area-item" style="display: flex; align-items: center;">
+									    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADuElEQVR4nO2ZWYiOURjHfzRkmbHPZOJCWYZCiNwoW7JEGtkaV24VuZG9xnZBcodsxYWILJESLiQiDLIklEhqLFnGvoxPR/+3TtN8531f3znffCO/euvr/f7vc/bnOec58J9G6QBUAbuAq8BL4Luel3q3E5gLlFCAVAB7gM9AJuHzCdgN9KUAaAdsBn6ocr/U6yuB0Wpgez0VercKuCZtRqO1CWjTVI0wPXlHlakH9gO9U3zfBzhgNegyUE6eGao5byrwABiWg63hwEPZegYMJo8jETXiDNDZg80uwFmrMeX5WBN3rEYUebTdCjhnTbOga2azNZ18jERjI/NIZawhEBXyTvU5rok4RsgBfAS6hyhgj3rKeKfQHFRZ20JE7E/qqSQutgxYB9xUz5rnBrAWKE3oUH7pu2I8UqUeMsEujplAnSOivwdmJLBzXfo5eGSXjJqIHdeIKMAdUySPIvsY4LgVQCtjbK2WdofHdvwZiYwq5ppO0UgsceiWSvMO6ObQjZXuCh55JaP9HJp11kjEcSKBi+0nzQs88k1GXVvvWwlGrWFvGweQjRJpvuKRLzLqirYfpEniZaJKmqno2kVkdDTwRq2MugJUXYqGdLA8WDZ6SPMcj9yX0YEOzU1pjHeKY5y0NQ7NEGnu4pGTMjrboVkrzfEU9qodmnnSHMUjG2R0vUNTqqmSkYvNxnJp3gJdHbqNCRqbmtkyarbZLmYo2GXkYsdqzRRrOkUjYTTTY2xdlDZOl4oyFf5V3sRFpYJdti3K2wSV66Sdtnk64pkbqsiUBNpuCnY1cst12jtVx0yniFkqy4yKd6LIvZfwHEmw1v6a/pbvj5teudBRAdhsPnuFKqRGjTGuMRQLVcb5gGWwwEoOhKAIeKwyzBkoGMWWRzJna9/MtbYlJqsSlC0q7HDAqbuCPFBuLcZBHu1OsA5cJo7kha0BRsUs7qD5rMboaWVVRnmwV6lGvA6U+HNSbZ3yWuZgp7WVxF5AE9AWeKIKzM/BzhLZuOc5l/xX+a5anfrSUmq584k0IS2AS6qISXCnZZ++Ndv7Jmeors9+AiNTfDfJuktMc9MVlOiYez/hvYbJojzVN4soIFoDtxMchyO2W+eNXDxeEIZoitXHZFImKf6Y0+YACpQ16uknWbYZZUqBGs1iCpgi4IKVxjFeLcJModP671SD/wqSnlbSe2UjR+XaUFdqIZimdWDWy2Rgqn4bFz2eZka1RuCNUkDm9zKaIS2AQ1Y+q+GaaVaU6Mbpsu9LTf5VfgNttDSN+ivn8AAAAABJRU5ErkJggg==" alt="marker--v1" style="width: 20px;height: 20px;margin-right: 0px;margin-top: 0px;">
+									    <p style="display: flex; align-items: center;" style="margin-top:10px;"><?php echo $row['area_name']; ?></p>
+									</div>
+<style>
+	.area-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Space between items */
+}
+
+.area-item img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px; /* Space between image and text */
+}
+
+</style>
+
+
+									<div class="area-item" style="display: flex; align-items: center;">
+									    <img src="data:image/png;base64,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" alt="marker--v1" style="width: 30px;height: 30px;margin-right: 0px;margin-top: 0px;">
+									    <h5 class="card-title"><?php echo htmlspecialchars($row['service']); ?></h5>
+									</div>
+                                        
+                                        <h6 class="card-title"><?php echo htmlspecialchars($row['service_title']); ?></h6>
+        
+                                        <a href="services_details.php" class="btn btn-primary" style="color:white;">Learn More</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    } else {
+                        echo "<p>No services found in table: $tableName</p>";
+                    }
+                }
+            } else {
+                echo "<p>No tables found in the database.</p>";
+            }
+
+            $conn->close();
+            ?>
+        </div>
     </div>
 </section>
+<style>
+    /* Style to add space around the section */
+.services {
+    padding: 60px 0;
+}
 
-<?php
-// Close the connection after all queries are done
-$conn->close();
-?>
+/* Make card title bold and larger */
+.card-title {
+    font-size: 1.2rem;
+}
+
+/* Add some spacing for card body */
+.card-body {
+    padding: 20px;
+}
+
+/* Add hover effect on card */
+.card:hover {
+    transform: translateY(-5px);
+    transition: 0.3s;
+}
+
+</style>
 
 
 
@@ -374,5 +407,11 @@ $conn->close();
 		<script src="js/bootstrap.min.js"></script>
 		<!-- Main JS -->
 		<script src="js/main.js"></script>
-</body>
-</html>
+
+
+
+
+
+
+        </body>
+        </html>

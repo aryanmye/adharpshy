@@ -97,6 +97,12 @@ include 'leftaside.php';
                                 </div>
 
                                 <div class="form-group">
+                                    <input type="text" name="service" id="service" class="form-control" placeholder="Enter Service" required />
+                                </div>
+
+
+
+                                <div class="form-group">
                                     <input type="text" name="service_title" id="service_title" class="form-control" placeholder="Enter Service Title" required />
                                 </div>
 
@@ -104,11 +110,7 @@ include 'leftaside.php';
                                 <div class="form-group">
                                     <input type="file" name="image" id="image" class="form-control" placeholder="Choose an Image" required />
                                 </div>
-
-                                <div class="form-group">
-                                    <input type="text" name="service" id="service" class="form-control" placeholder="Enter Service" required />
-                                </div>
-
+                                
                             </div>
                         </div>
 
