@@ -11,6 +11,18 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "adharblog";
+
+$coni = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($coni->connect_error) {
+    die("Connection failed: " . $coni->connect_error);
+}
 ?>
 
 
@@ -34,9 +46,12 @@ if ($conn->connect_error) {
 		
 		<!-- Favicon -->
         <link rel="icon" href="img/favicon-32x32.png">
-		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+		<link rel="stylesheet" href="path/to/font-awesome/css/all.min.css">
+
 		<!-- Google Fonts -->
 		<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -68,6 +83,94 @@ if ($conn->connect_error) {
 		{
 			scroll-behavior: smooth;
 		}
+		/* Style the reviews section */
+		.customer-reviews {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+}
+
+/* Section title */
+.customer-reviews .section-title h2 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Review card */
+.review-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.review-card .review-img {
+    margin-bottom: 20px;
+}
+
+.review-card .review-img img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.review-card .review-content .review-text {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.review-card .review-content .customer-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.review-card .review-content .customer-location {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Carousel controls */
+.carousel-control-prev, .carousel-control-next {
+    background-color: #007bff;
+    width: 50px;  /* Increased size */
+    height: 50px; /* Increased size */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7; /* Slight opacity for a modern look */
+    transition: opacity 0.3s ease; /* Add transition on hover */
+}
+
+.carousel-control-prev:hover, .carousel-control-next:hover {
+    opacity: 1; /* Full opacity on hover */
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    width: 20px;  /* Slightly bigger icon */
+    height: 20px;
+    background-color: white;  /* White icon */
+    border-radius: 50%;
+}
+
+/* Carousel active item styling */
+.carousel-item {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Optional: Custom SVG background icons for prev and next if the default Bootstrap icons aren't working */
+.carousel-control-prev-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M12 15l-5-5 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>');
+}
+
+.carousel-control-next-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M8 5l5 5-5 5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>');
+}
+
 	</style>
     <body>
 	
@@ -207,24 +310,21 @@ if ($conn->connect_error) {
                                     while ($row = $result->fetch_assoc()) {
                             ?>
                                     <!-- Display Data -->
-                                    <div class="news-head" style="width: 670px; height: 330px;">
+                                    <div class="news-head">
                                         <?php
                                             // Display the image dynamically
-                                            $imgSrc = "upload/" . htmlspecialchars($row['image_path']);
+                                            $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
                                             // Replace spaces with URL-encoded value
                                             $imgSrc = str_replace(' ', '%20', $imgSrc);
 
-                                            if (file_exists("upload/" . $row['image_path'])) {
+                                            if (file_exists("uploado/" . $row['image_path'])) {
                                                 echo "<img src='$imgSrc' alt='Service Image'>";
                                             } else {
                                                 echo "<img src='img/blog2.jpg' alt='Placeholder Image'>"; // Fallback for missing images
                                             }
                                         ?>
                                     </div>
-                                    <div class="area-item" style="display: flex; align-items: center; margin-top:10px;">
-									    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADuElEQVR4nO2ZWYiOURjHfzRkmbHPZOJCWYZCiNwoW7JEGtkaV24VuZG9xnZBcodsxYWILJESLiQiDLIklEhqLFnGvoxPR/+3TtN8531f3znffCO/euvr/f7vc/bnOec58J9G6QBUAbuAq8BL4Luel3q3E5gLlFCAVAB7gM9AJuHzCdgN9KUAaAdsBn6ocr/U6yuB0Wpgez0VercKuCZtRqO1CWjTVI0wPXlHlakH9gO9U3zfBzhgNegyUE6eGao5byrwABiWg63hwEPZegYMJo8jETXiDNDZg80uwFmrMeX5WBN3rEYUebTdCjhnTbOga2azNZ18jERjI/NIZawhEBXyTvU5rok4RsgBfAS6hyhgj3rKeKfQHFRZ20JE7E/qqSQutgxYB9xUz5rnBrAWKE3oUH7pu2I8UqUeMsEujplAnSOivwdmJLBzXfo5eGSXjJqIHdeIKMAdUySPIvsY4LgVQCtjbK2WdofHdvwZiYwq5ppO0UgsceiWSvMO6ObQjZXuCh55JaP9HJp11kjEcSKBi+0nzQs88k1GXVvvWwlGrWFvGweQjRJpvuKRLzLqirYfpEniZaJKmqno2kVkdDTwRq2MugJUXYqGdLA8WDZ6SPMcj9yX0YEOzU1pjHeKY5y0NQ7NEGnu4pGTMjrboVkrzfEU9qodmnnSHMUjG2R0vUNTqqmSkYvNxnJp3gJdHbqNCRqbmtkyarbZLmYo2GXkYsdqzRRrOkUjYTTTY2xdlDZOl4oyFf5V3sRFpYJdti3K2wSV66Sdtnk64pkbqsiUBNpuCnY1cst12jtVx0yniFkqy4yKd6LIvZfwHEmw1v6a/pbvj5teudBRAdhsPnuFKqRGjTGuMRQLVcb5gGWwwEoOhKAIeKwyzBkoGMWWRzJna9/MtbYlJqsSlC0q7HDAqbuCPFBuLcZBHu1OsA5cJo7kha0BRsUs7qD5rMboaWVVRnmwV6lGvA6U+HNSbZ3yWuZgp7WVxF5AE9AWeKIKzM/BzhLZuOc5l/xX+a5anfrSUmq584k0IS2AS6qISXCnZZ++Ndv7Jmeors9+AiNTfDfJuktMc9MVlOiYez/hvYbJojzVN4soIFoDtxMchyO2W+eNXDxeEIZoitXHZFImKf6Y0+YACpQ16uknWbYZZUqBGs1iCpgi4IKVxjFeLcJModP671SD/wqSnlbSe2UjR+XaUFdqIZimdWDWy2Rgqn4bFz2eZka1RuCNUkDm9zKaIS2AQ1Y+q+GaaVaU6Mbpsu9LTf5VfgNttDSN+ivn8AAAAABJRU5ErkJggg==" alt="marker--v1" style="width: 20px;height: 20px;margin-right: 0px;margin-top: 2px;">
-									    <p style="display: flex; align-items: center;" style="margin-top:10px;"><?php echo $row['area_name']; ?></p>
-									</div>
+                                    
 <style>
 	.area-item {
     display: flex;
@@ -240,26 +340,28 @@ if ($conn->connect_error) {
 
 </style>
                                     <h1 class="news-title">
-                                        <?php echo $row['service_title']; ?>
+                                        <?php echo $row['service_title']; ?> in <?php echo $row['area_name']; ?>
                                     </h1>
 
-                                    <div class="meta">
-                                        <div class="meta-left">
-                                            <span class="date"><i class="fa fa-clock-o"></i><?php echo date("F j, Y", strtotime($row['created_at'])); ?></span>
-                                            <div class="area-item" style="display: flex; align-items: center;">
-											    <img src="data:image/png;base64,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" alt="marker--v1" style="width: 40px;height: 40px;margin-right: 3px;margin-top: 0px;">
-											    <h4 class="news-title"><?php echo $row['service']; ?></h4><hr>
-											</div>    
-											
-										<p><?php echo $row['service_discription']; ?></p>
+                                    
+									<div class="meta">
 										
-										</div>
-                                    </div>
+											<span class="date"><i class="fa-solid fa-notes-medical"></i><?= ucfirst($row['service']) ?></span>
+											<span class="date"><i class="fas fa-map-marker-alt"></i>
+											<?= ucfirst($row['area_name']) ?></span>
+											<span class="author"><i class="fa fa-clock-o"></i><?= ucfirst($row['created_at']) ?></span>
 
-                                    <div class="news-text">
-                                        
-                                        
-                                    </div>
+									
+										
+									</div>
+
+									<div class="news-text">
+										<p><?= ucfirst($row['service_discription']) ?></p>
+										
+										
+										
+										
+									</div>
                             <?php
                                     }
                                 } else {
@@ -267,9 +369,12 @@ if ($conn->connect_error) {
                                 }
                             ?>
                         </div>
+						
+
                     </div>
                 </div>
             </div>
+			
 
             <!-- Sidebar for Cities -->
             <div class="col-lg-4 col-12">
@@ -313,12 +418,93 @@ if ($conn->connect_error) {
                                 }
                             ?>
                         </ul>
+						
                     </div>
+ 
+					
+                </div>
+				
+            </div>
+			
+        </div>
+		
+    </div>
+
+	
+	
+</section>
+
+<section class="customer-reviews section" id="reviews">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title text-center">
+                    <h2>What Our Customers Say</h2>
+                    <img src="img/section-img.png" alt="#" class="img-fluid">
                 </div>
             </div>
         </div>
+
+        <!-- Customer Reviews Carousel -->
+        <div id="reviewCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+            <div class="carousel-inner">
+                <!-- Review 1 -->
+                <div class="carousel-item active">
+                    <div class="review-card">
+                        <div class="review-img">
+                            <img src="img/customer1.jpg" alt="Customer 1" class="img-fluid rounded-circle">
+                        </div>
+                        <div class="review-content">
+                            <p class="review-text">"Dr. Patil is helpful, appointment wait times is not lengthy."</p>
+                            <h5 class="customer-name">Shilpa Shinde</h5>
+                            <span class="customer-location">Pune , Maharastra</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div class="carousel-item">
+                    <div class="review-card">
+                        <div class="review-img">
+                            <img src="img/customer2.jpg" alt="Customer 2" class="img-fluid rounded-circle">
+                        </div>
+                        <div class="review-content">
+                            <p class="review-text">"Dr. Patil's empathetic approach and effective treatment plan have significantly improved my mental health."
+							</p>
+                            <h5 class="customer-name">Abhijeet Magdum</h5>
+                            <span class="customer-location">Kolhapur , Maharastra</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 3 -->
+                <div class="carousel-item">
+                    <div class="review-card">
+                        <div class="review-img">
+                            <img src="img/customer3.jpg" alt="Customer 3" class="img-fluid rounded-circle">
+                        </div>
+                        <div class="review-content">
+                            <p class="review-text">"Dr. Patil's expertise and understanding have been invaluable in my recovery."
+							"The AdharPsych Clinic offers a supportive and non-judgmental space for healing.""</p>
+                            <h5 class="customer-name">Aditi Kolhapure</h5>
+                            <span class="customer-location">Kolhapur , Maharastra</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- More reviews can be added here in the same format -->
+            </div>
+            <!-- Carousel Controls -->
+			<a class="carousel-control-prev" href="#reviewCarousel" role="button" data-slide="prev">
+    <span aria-hidden="true"><i class="fa-solid fa-arrow-left"></i></span>
+    <span class="sr-only">Previous</span>
+</a>
+<a class="carousel-control-next" href="#reviewCarousel" role="button" data-slide="next">
+    <span  aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+    <span class="sr-only">Next</span>
+</a>
+
+        </div>
     </div>
 </section>
+
 
 
 <?php
@@ -423,7 +609,10 @@ $conn->close();
 			<!--/ End Copyright -->
 		</footer>
 		<!--/ End Footer Area -->
-		
+		<!-- Bootstrap JS (Include after jQuery and Bootstrap CSS) -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+
 		<!-- jquery Min JS -->
         <script src="js/jquery.min.js"></script>
 		<!-- jquery Migrate JS -->

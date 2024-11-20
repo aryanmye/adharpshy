@@ -34,14 +34,15 @@ $rowCount = mysqli_num_rows($que2);
                         <!-- Single Blog -->
                         <div class="single-news">
                             <div class="news-head">
-                                <?php $imgSrc = "upload/" . htmlspecialchars($row2['image']); ?>
+                                <?php $imgSrc = "uploado/" . htmlspecialchars($row2['image']); ?>
                                 <img src="<?= $imgSrc ?>" alt="blog image" class="img-fluid">
                             </div>
                             <div class="news-body">
                                 <div class="news-content">
                                     <div class="date">Published on : <?= htmlspecialchars($row2['publish_date']) ?></div>
                                     <h2><a href="blog-single.php?title=<?= htmlspecialchars($row2['title']) ?>"><?= htmlspecialchars($row2['title']) ?></a></h2>
-                                    <p class="text"><?= htmlspecialchars(substr($row2['content'], 0, 150)) ?>...</p>
+                                    <p class="text"><?= htmlspecialchars(substr(strip_tags($row2['content']), 0, 150)) ?>...</p>
+
                                 </div>
                             </div>
                         </div>

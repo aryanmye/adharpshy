@@ -23,15 +23,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $filename = $_FILES['image']['name'];
     $tmpname = $_FILES['image']['tmp_name'];
     $size = $_FILES['image']['size'];
-    $destination = $filename;
+    $adminPanelUploadPath = "upload/" . $filename;  // Inside admin-panel folder
+    $externalUploadPath = "../uploado/" . $filename;  // Outside admin-panel folder
 
-    if ($size <= 20000000 && move_uploaded_file($tmpname, $destination)) {
-        // Insert data into the selected city's table
+    if ($size <= 20000000) {
+        // Move the file to the 'admin-panel' upload folder
+        if (move_uploaded_file($tmpname, $adminPanelUploadPath)) {
+            // Copy the file to the 'uploado' folder outside the admin-panel
+            if (copy($adminPanelUploadPath, $externalUploadPath)) {
         $conn = new mysqli($servername, $username, $password, 'cities'); // Reconnect to the 'cities' database
 
         // SQL query to insert data into the selected city's table (category)
         $sql = "INSERT INTO `$category` (area_name, service_title, service_discription, service, image_path)
-                VALUES ('$area_name', '$service_title', '$service_discription', '$service', '$destination')";
+                VALUES ('$area_name', '$service_title', '$service_discription', '$service', '$filename')";
 
         if (mysqli_query($conn, $sql)) {
             echo "New Service added successfully!";
@@ -43,4 +47,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Failed to upload image or image size exceeds 20MB.";
     }
 }
+    }}
 ?>

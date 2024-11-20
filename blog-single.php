@@ -53,7 +53,8 @@ if (isset($_GET['title'])) {
 								<div class="single-main">
 									<!-- News Head -->
 									<div class="news-head">
-										<img src="img/blog1.jpg" alt="#">
+									<?php $imgSrc = "uploado/" . htmlspecialchars($row9['image']); ?>
+									<img src="<?= $imgSrc ?>" alt="blog image" class="img-fluid">
 									</div>
 									<!-- News Title -->
 									<h1 class="news-title"><?= ucfirst($row9['title']) ?></h1>
@@ -69,20 +70,7 @@ if (isset($_GET['title'])) {
 									<div class="news-text">
 										<p><?= ucfirst($row9['content']) ?></p>
 										
-										<div class="image-gallery">
-											<div class="row">
-												<div class="col-lg-6 col-md-6 col-12">
-													<div class="single-image">
-														<img src="img/blog2.jpg" alt="#">
-													</div>
-												</div>
-												<div class="col-lg-6 col-md-6 col-12">
-													<div class="single-image">
-														<img src="img/blog3.jpg" alt="#">
-													</div>
-												</div>
-											</div>
-										</div>
+										
 										
 										
 									</div>
@@ -187,13 +175,14 @@ if (isset($_GET['title'])) {
 								$que2 = mysqli_query($conn, $sql2);
 								$rowCount = mysqli_num_rows($que2)
 								?>
-							<?php if ($rowCount > 0): ?>
-								<?php while ($row2 = mysqli_fetch_assoc($que2)): ?>
+							
 								<h3 class="title">Recent post</h3>
+								<?php if ($rowCount > 0): ?>
+									<?php while ($row2 = mysqli_fetch_assoc($que2)): ?>
 								<!-- Single Post -->
 								<div class="single-post">
 									<div class="image">
-									<?php $imgSrc = "upload/" . htmlspecialchars($row2['image']); ?>
+									<?php $imgSrc = "uploado/" . htmlspecialchars($row2['image']); ?>
 									<img src="<?= $imgSrc ?>" alt="blog image" class="img-fluid">
 									</div>
 									<div class="content">
