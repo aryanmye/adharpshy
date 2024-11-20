@@ -23,14 +23,71 @@ if ($conn->connect_error) {
     <link rel="stylesheet" href="assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css"/>
     <link rel="stylesheet" href="assets/plugins/charts-c3/plugin.css"/>
     <link rel="stylesheet" href="assets/plugins/morrisjs/morris.min.css" />
+
+    <!-- Add Material Design Icon Font (for hamburger menu icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Material-Design-Iconic-Font/5.0.0/css/material-design-iconic-font.min.css">
+
+    <!-- Sidebar toggle styles -->
+    <style>
+        /* Sidebar toggle styles */
+        body {
+            transition: all 0.3s ease;
+        }
+
+        body.mobile-menu-open .left-aside {
+            transform: translateX(0); /* Show the sidebar */
+        }
+
+        .left-aside {
+            transform: translateX(-100%); /* Initially hide the sidebar off-screen */
+            transition: transform 0.3s ease;
+        }
+
+       
+
+        body.mobile-menu-open .overlay {
+            display: block;
+        }
+
+        /* Button styling */
+        .mobile_menu {
+            font-size: 24px; /* Ensure the button is large enough */
+            color: #fff; /* White color for the button */
+            background-color: transparent; /* Transparent background */
+            border: none; /* Remove default border */
+            cursor: pointer;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body class="theme-blush">
+
+    <!-- Overlay for Sidebar -->
+    <div class="overlay"></div>
+
     <!-- Left Sidebar -->
     <?php include 'leftaside.php'; ?>
+
+    
 
     <div class="container">
         <section class="content m-5" style="width:100%;">
             <div class="body_scroll">
+            <div class="block-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-6 col-sm-12">
+                        <h2>Manage Services</h2>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.php"><i class="zmdi zmdi-home"></i> AdharPsych</a></li>
+                            <li class="breadcrumb-item"><a href="add_service.php">Add Services</a></li>
+                            <li class="breadcrumb-item active">Manage Services</li>
+                        </ul>
+                    </div>
+                    <!-- Mobile menu toggle button -->
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button" style="background-color:blue;"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+
+                </div>
+            </div>
                 <div class="container">
                     <!-- Display session messages -->
 
@@ -130,5 +187,18 @@ if ($conn->connect_error) {
     <script src="assets/bundles/c3.bundle.js"></script>
     <script src="assets/bundles/mainscripts.bundle.js"></script>
     <script src="assets/js/pages/index.js"></script>
+
+    <!-- Mobile menu toggle script -->
+    <script>
+        $(document).ready(function() {
+            // When the mobile menu button is clicked
+            $(".mobile_menu").on("click", function() {
+                $("body").toggleClass("mobile-menu-open");
+            });
+
+            
+        });
+    </script>
+
 </body>
 </html>
