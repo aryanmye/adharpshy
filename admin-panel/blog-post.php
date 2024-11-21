@@ -9,15 +9,17 @@
 
     <title>AdharPsych - Blog</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- Favicon-->
+    
+    <!-- Core CSS -->
     <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/plugins/bootstrap-select/css/bootstrap-select.css" />
-    <!-- Custom Css -->
     <link rel="stylesheet" href="assets/css/style.min.css">
-    <script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
     <link rel="stylesheet" href="assets/plugins/summernote/dist/summernote.css" />
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Ensure jQuery is included -->
+    <!-- CKEditor -->
+    <script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+    <!-- JQuery (Latest Version) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         /* Sidebar toggle styles */
@@ -33,10 +35,7 @@
             transform: translateX(-100%); /* Initially hide the sidebar off-screen */
             transition: transform 0.3s ease;
         }
-
-       
     </style>
-
 </head>
 
 <body class="theme-blush">
@@ -44,19 +43,8 @@
     <!-- Overlay For Sidebars -->
     <div class="overlay"></div>
 
-    <!-- Main Search -->
-    <div id="search">
-        <button id="close" type="button" class="close btn btn-primary btn-icon btn-icon-mini btn-round">x</button>
-        <form>
-            <input type="search" value="" placeholder="Search..." />
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>
-
     <!-- Left Sidebar -->
     <?php include 'leftaside.php'; ?>
-
-    <!-- Right Sidebar -->
 
     <section class="content blog-page">
         <div class="body_scroll">
@@ -69,10 +57,9 @@
                             <li class="breadcrumb-item"><a href="blog-dashboard.php">Blog</a></li>
                             <li class="breadcrumb-item active">New Post</li>
                         </ul>
-                        <!-- Mobile menu toggle button -->
                         <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
                     </div>
-                    <div class="col-lg-5 col-md-6 col-sm-12">                
+                    <div class="col-lg-5 col-md-6 col-sm-12">
                         <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
                     </div>
                 </div>
@@ -132,46 +119,71 @@
                                     <!-- Content -->
                                     <div class="form-group">
                                         <textarea name="content" id="content" required></textarea>
-                                        <script>
-                                            CKEDITOR.replace('content');
-                                            document.querySelector('form').onsubmit = function() {
-                                                for (let instance in CKEDITOR.instances) {
-                                                    CKEDITOR.instances[instance].updateElement();
-                                                }
-                                            };
-                                        </script>
+                                       
                                     </div>
 
                                     <!-- Submit Button -->
-                                    <button type="submit" class="btn btn-info waves-effect m-t-20 w-100">Submit</button> <!-- Full width button -->
+                                    <button type="submit" class="btn btn-info waves-effect m-t-20 w-100">Submit</button>
                                 </div>
                             </div>
                         </form>
-                    </div>        
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-   <!-- JQuery and Scripts -->
-<script src="assets/bundles/libscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js) -->
-<script src="assets/bundles/vendorscripts.bundle.js"></script> <!-- slimscroll, waves Scripts Plugin Js -->
-<script src="assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
+    <!-- Essential Scripts -->
+    <script src="assets/bundles/libscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js) -->
+    <script src="assets/bundles/vendorscripts.bundle.js"></script> <!-- slimscroll, waves Scripts Plugin Js -->
+    <script src="assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
 <script src="assets/bundles/sparkline.bundle.js"></script> <!-- Sparkline Plugin Js -->
 <script src="assets/bundles/c3.bundle.js"></script>
-<script src="assets/bundles/mainscripts.bundle.js"></script>
 <script src="assets/js/pages/index.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            // When the mobile menu button is clicked
-            $(".mobile_menu").on("click", function() {
-                $("body").toggleClass("mobile-menu-open");
-            });
-
-          
+<script src="assets/bundles/mainscripts.bundle.js"></script>
+<script>
+    $(document).ready(function () {
+        // Handle mobile menu toggle
+        $(".mobile_menu").on("click", function () {
+            $("body").toggleClass("mobile-menu-open");
         });
-    </script>
+
+        // Ensure CKEditor is initialized
+        CKEDITOR.replace('content');
+
+        // Handle form submission
+        $("form").on("submit", function (event) {
+            // Prevent default behavior to avoid page reload
+            event.preventDefault();
+
+            // Get CKEditor content and set it into the textarea
+            var contentData = CKEDITOR.instances.content.getData();
+            $("#content").val(contentData);  // Set the content into the textarea
+
+            // Perform form validation (if needed) or submit using AJAX
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                processData: false, // Don't process the data
+                contentType: false, // Don't set content type
+                success: function (response) {
+                    // Handle success (e.g., show a message or redirect)
+                    alert("Form submitted successfully!");
+                    // You can also redirect to another page or clear the form if needed.
+                    window.location.href = "blog_dashboard.php"; // Redirect to the blogs dashboard
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle error (e.g., show an error message)
+                    alert("Form submission failed. Please try again.");
+                }
+            });
+        });
+    });
+</script>
+
 
 </body>
 

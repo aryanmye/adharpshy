@@ -49,6 +49,11 @@ $rowCount = mysqli_num_rows($que2);
             transform: translateX(-100%); /* Initially hide the sidebar off-screen */
             transition: transform 0.3s ease;
         }
+        .img-fluid
+        {
+            height: 300px;
+            width:100%;
+        }
     </style>
 </head>
 <body class="theme-blush">

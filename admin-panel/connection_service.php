@@ -7,10 +7,10 @@ $username = "root";
 $password = "";
 $dbname = "cities";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$coni = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($coni->connect_error) {
+    die("Connection failed: " . $coni->connect_error);
 }
 ?>

@@ -1,10 +1,10 @@
 <?php
-include 'connection_service.php';
-$conn = new mysqli($servername, $username, $password, $dbname);
+include 'coniection_service.php';
+$coni = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check coniection
+if ($coni->coniect_error) {
+    die("coniection failed: " . $coni->coniect_error);
 }
 ?>
 
@@ -94,11 +94,11 @@ if ($conn->connect_error) {
                     <?php
                     // Query to fetch all table names from the 'cities' database
                     $sql1 = "SHOW TABLES";
-                    $tablesResult = mysqli_query($conn, $sql1);
+                    $tablesResult = mysqli_query($coni, $sql1);
 
                     // Check if the query was successful
                     if ($tablesResult === false) {
-                        echo "Error executing query: " . mysqli_error($conn);
+                        echo "Error executing query: " . mysqli_error($coni);
                         exit();
                     }
 
@@ -108,11 +108,11 @@ if ($conn->connect_error) {
 
                         // Query to fetch data from each table
                         $sql2 = "SELECT * FROM `$tableName` ORDER BY `created_at` DESC";
-                        $que2 = mysqli_query($conn, $sql2);
+                        $que2 = mysqli_query($coni, $sql2);
 
                         // Check if the query was successful
                         if ($que2 === false) {
-                            echo "Error executing query for table $tableName: " . mysqli_error($conn);
+                            echo "Error executing query for table $tableName: " . mysqli_error($coni);
                             continue;
                         }
 
@@ -165,7 +165,7 @@ if ($conn->connect_error) {
                         }
                     }
 
-                    $conn->close();
+                    $coni->close();
                     ?>
 
                     <?php if (isset($_SESSION['message'])): ?>

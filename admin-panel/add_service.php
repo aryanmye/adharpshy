@@ -1,17 +1,17 @@
 <?php
-include 'connection_service.php';
+include 'coniection_service.php';
 
-// Connect to MySQL server and select the 'cities' database
-$conn = new mysqli($servername, $username, $password, 'cities');
+// coniect to MySQL server and select the 'cities' database
+$coni = new mysqli($servername, $username, $password, 'cities');
 
-// Check for connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check for coniection
+if ($coni->coniect_error) {
+    die("coniection failed: " . $coni->coniect_error);
 }
 
 // Query to fetch table names from the 'cities' database
 $sql = "SHOW TABLES";
-$result = $conn->query($sql);
+$result = $coni->query($sql);
 
 $options = '';
 if ($result->num_rows > 0) {
@@ -26,7 +26,7 @@ if ($result->num_rows > 0) {
     $options = "<option>No cities found</option>";
 }
 
-$conn->close();
+$coni->close();
 ?>
 
 <!doctype html>
@@ -182,20 +182,52 @@ $conn->close();
 <script src="assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
 <script src="assets/bundles/sparkline.bundle.js"></script> <!-- Sparkline Plugin Js -->
 <script src="assets/bundles/c3.bundle.js"></script>
-<script src="assets/bundles/mainscripts.bundle.js"></script>
 <script src="assets/js/pages/index.js"></script>
+<script src="assets/bundles/mainscripts.bundle.js"></script>
 
     <!-- Add JavaScript for Sidebar Toggle -->
     <script>
-        $(document).ready(function() {
-            $(".mobile_menu").on("click", function() {
-                $("body").toggleClass("mobile-menu-open");
-            });
+    $(document).ready(function () {
+        // Handle mobile menu toggle
+        $(".mobile_menu").on("click", function () {
+            $("body").toggleClass("mobile-menu-open");
+        });
 
-            $(".overlay").on("click", function() {
-                $("body").removeClass("mobile-menu-open");
+        // Ensure CKEditor is initialized for service description
+        CKEDITOR.replace('service_discription');
+
+        // Handle form submission
+        $("form").on("submit", function (event) {
+            // Prevent the form from submitting normally
+            event.preventDefault();
+
+            // Get CKEditor content and set it into the textarea
+            var contentData = CKEDITOR.instances.service_discription.getData();
+            $("#service_discription").val(contentData);  // Set the content into the textarea
+
+            // Prepare form data using FormData to handle file uploads
+            var formData = new FormData(this);
+
+            // Perform AJAX request to submit the form
+            $.ajax({
+                url: $(this).attr('action'),  // URL where the form will be submitted
+                type: $(this).attr('method'), // Form submission method (POST)
+                data: formData,               // Form data
+                processData: false,           // Don't process the data
+                contentType: false,           // Don't set content type (for file upload)
+                success: function (response) {
+                    // Handle success (e.g., show a success message)
+                    alert("Service added successfully!");
+                    window.location.href = "manage_services.php"; // Redirect to the service dashboard or another page
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle error (e.g., show an error message)
+                    alert("Error occurred while submitting the form. Please try again.");
+                }
             });
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>

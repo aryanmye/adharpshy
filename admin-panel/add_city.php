@@ -127,22 +127,50 @@
     <script src="assets/bundles/jvectormap.bundle.js"></script> <!-- JVectorMap Plugin Js -->
     <script src="assets/bundles/sparkline.bundle.js"></script> <!-- Sparkline Plugin Js -->
     <script src="assets/bundles/c3.bundle.js"></script>
-    <script src="assets/bundles/mainscripts.bundle.js"></script>
+   
     <script src="assets/js/pages/index.js"></script>
+    <script src="assets/bundles/mainscripts.bundle.js"></script>
 
     <script>
-        $(document).ready(function() {
-            // When the mobile menu button is clicked
-            $(".mobile_menu").on("click", function() {
-                $("body").toggleClass("mobile-menu-open");
-            });
+    $(document).ready(function () {
+        // Handle mobile menu toggle
+        $(".mobile_menu").on("click", function () {
+            $("body").toggleClass("mobile-menu-open");
+        });
 
-            // Optional: Close the sidebar when overlay is clicked
-            $(".overlay").on("click", function() {
-                $("body").removeClass("mobile-menu-open");
+        // Ensure CKEditor is initialized
+      
+
+        // Handle form submission
+        $("form").on("submit", function (event) {
+            // Prevent default behavior to avoid page reload
+            event.preventDefault();
+
+            
+
+            // Perform form validation (if needed) or submit using AJAX
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                processData: false, // Don't process the data
+                contentType: false, // Don't set content type
+                success: function (response) {
+                    // Handle success (e.g., show a message or redirect)
+                    alert("City added successfully!");
+                    // You can also redirect to another page or clear the form if needed.
+                    window.location.href = "manage_cities.php"; // Redirect to the blogs dashboard
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle error (e.g., show an error message)
+                    alert("Form submission failed. Please try again.");
+                }
             });
         });
-    </script>
+    });
+</script>
 
 </body>
 </html>
