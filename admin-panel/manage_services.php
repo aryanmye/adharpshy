@@ -1,10 +1,10 @@
 <?php
-include 'coniection_service.php';
+include 'connection_service.php';
 $coni = new mysqli($servername, $username, $password, $dbname);
 
 // Check coniection
-if ($coni->coniect_error) {
-    die("coniection failed: " . $coni->coniect_error);
+if ($coni->connect_error) {
+    die("coniection failed: " . $coni->connect_error);
 }
 ?>
 
