@@ -125,21 +125,21 @@ if ($coni->connect_error) {
                                 // Concatenate the image path
                                 $imgSrc = "upload/" . htmlspecialchars($row2['image_path']);
                                 $cityName = isset($row2['city_name']) ? urlencode($row2['city_name']) : 'unknown_city';
-
+                            
                                 echo "
                                 <div class='col-lg-3 col-md-4 col-sm-6 m-1'>
                                     <div class='card'>
                                         <div class='blogitem mb-5'>
                                             <div class='blogitem-image'>
                                                 <a href='../services.php?id=" . htmlspecialchars($row2['id']) . "'>
-                                                    <img src='$imgSrc' alt='service image' class='img-fluid'>
+                                                    <img src='$imgSrc' alt='service image' class='img-fluid' style='width: 100%; height: 180px; object-fit: cover; border-radius: 8px;'>
                                                 </a>
                                             </div>
                                             <div class='blogitem-content p-3'>
-                                                <h5><a href='../services.php?id=" . htmlspecialchars($row2['id']) . "'>" . htmlspecialchars($row2['area_name']) . "</a></h5>
-                                                <p>" . htmlspecialchars(substr($row2['created_at'], 0, 150)) . "...</p>
-                                                <h6>" . htmlspecialchars(substr($row2['service'], 0, 150)) . "...</h6>
-                                                <p>" . htmlspecialchars(substr($row2['service_title'], 0, 150)) . "...</p>
+                                                <h5><a href='../services.php?id=" . htmlspecialchars($row2['id']) . "' class='service-title'>" . htmlspecialchars($row2['area_name']) . "</a></h5>
+                                                <p class='text-muted'>" . htmlspecialchars(substr($row2['created_at'], 0, 150)) . "...</p>
+                                                <h6 class='service-description'>" . htmlspecialchars(substr($row2['service'], 0, 150)) . "...</h6>
+                                                <p class='service-title'>" . htmlspecialchars(substr($row2['service_title'], 0, 150)) . "...</p>
                                                 <div class='d-flex justify-content-between'>
                                                     <a href='../services.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "&created_at=" . urlencode($row2['created_at']) . "' class='btn btn-info btn-sm'>Read More</a>
                                                     <a href='del_service.php?db=cities&table=" . urlencode($tableName) . "&id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "' 
@@ -154,6 +154,8 @@ if ($coni->connect_error) {
                                         </div>
                                     </div>
                                 </div>";
+
+                                
                             }
                             echo "</div>";  // End of row
                         } else {
@@ -202,3 +204,13 @@ if ($coni->connect_error) {
 
 </body>
 </html>
+<style></style>
+<div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="card widget_2 big_icon pen">
+                        <div class="body">
+                            <h6>Services</h6>
+                            <h2>no of services</h2>
+
+                        </div>
+                    </div>
+</div>

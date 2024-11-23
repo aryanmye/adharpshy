@@ -301,138 +301,127 @@ if ($coni->connect_error) {
                     <div class="col-12">
                         <div class="single-main">
                             <?php
-                                // Ensure the table name is dynamic
-                                $tableName = isset($_GET['table']) ? $_GET['table'] : 'kolhapur'; // Default to 'kolhapur' if no table is specified
-                                $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1"; // Fetch only enabled services
-                                $result = $conn->query($sql);
+                                // Display data
+                                $tableName = isset($_GET['table']) ? $_GET['table'] : null;
+                                $allEnabledData = [];
+                                
+                                if ($tableName) {
+                                    // If a specific table is selected
+                                    $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
+                                    $result = $conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        $allEnabledData[$tableName] = $result->fetch_all(MYSQLI_ASSOC);
+                                    }
+                                } else {
+                                    // If no table is selected, fetch all data
+                                    $sql = "SHOW TABLES";
+                                    $result = $conn->query($sql);
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            $table = $row['Tables_in_cities'];
+                                            $query = "SELECT * FROM `$table` WHERE is_enabled = 1";
+                                            $data = $conn->query($query);
+                                            if ($data->num_rows > 0) {
+                                                $allEnabledData[$table] = $data->fetch_all(MYSQLI_ASSOC);
+                                            }
+                                        }
+                                    }
+                                }
 
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                            ?>
-                                    <!-- Display Data -->
-                                    <div class="news-head">
-                                        <?php
-                                            // Display the image dynamically
+                                if (!empty($allEnabledData)) {
+                                    foreach ($allEnabledData as $table => $data) {
+                                        foreach ($data as $row) {
+                                            echo '<div class="news-head">';
                                             $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
-                                            // Replace spaces with URL-encoded value
                                             $imgSrc = str_replace(' ', '%20', $imgSrc);
 
                                             if (file_exists("uploado/" . $row['image_path'])) {
-                                                echo "<img src='$imgSrc' alt='Service Image'>";
+                                                echo "<img src='$imgSrc' alt='Service Image' style='height: 335px;width: 665px;'>";
                                             } else {
-                                                echo "<img src='img/blog2.jpg' alt='Placeholder Image'>"; // Fallback for missing images
+                                                echo "<img src='img/blog2.jpg' alt='Placeholder Image'>";
                                             }
-                                        ?>
-                                    </div>
-                                    
-<style>
-	.area-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px; /* Space between items */
-}
-
-.area-item img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px; /* Space between image and text */
-}
-
-</style>
-                                    <h1 class="news-title">
-                                        <?php echo $row['service_title']; ?> in <?php echo $row['area_name']; ?>
-                                    </h1>
-
-                                    
-									<div class="meta">
-										
-											<span class="date"><i class="fa-solid fa-notes-medical"></i><?= ucfirst($row['service']) ?></span>
-											<span class="date"><i class="fas fa-map-marker-alt"></i>
-											<?= ucfirst($row['area_name']) ?></span>
-											<span class="author"><i class="fa fa-clock-o"></i><?= ucfirst($row['created_at']) ?></span>
-
-									
-										
-									</div>
-
-									<div class="news-text">
-										<p><?= ucfirst($row['service_discription']) ?></p>
-										
-										
-										
-										
-									</div>
-                            <?php
+                                            echo '</div>';
+                                            echo '<h1 class="news-title">' . htmlspecialchars($row['service_title']) . ' in ' . htmlspecialchars($row['area_name']) . '</h1>';
+                                            echo '<div class="meta">';
+                                            echo '<span class="date"><i class="fa-solid fa-notes-medical"></i> ' . ucfirst($row['service']) . '</span>';
+                                            echo '<span class="date"><i class="fas fa-map-marker-alt"></i> ' . ucfirst($row['area_name']) . '</span>';
+                                            echo '<span class="author"><i class="fa fa-clock-o"></i> ' . ucfirst($row['created_at']) . '</span>';
+                                            echo '</div>';
+                                            echo '<div class="news-text"><p>' . ucfirst($row['service_discription']) . '</p></div>';
+											echo'<hr>';
+                                        }
                                     }
                                 } else {
-                                    echo "<p>No data available</p>";
+                                    echo '<p>No data available</p>';
                                 }
                             ?>
                         </div>
-						
-
                     </div>
                 </div>
             </div>
-			
 
             <!-- Sidebar for Cities -->
             <div class="col-lg-4 col-12">
                 <div class="main-sidebar">
-                    <div class="single-widget category">
-                        <h3 class="title">Cities</h3>
-                        <ul class="categor-list">
-                            <?php
-                                // Assuming $conn is your database connection
-                                $sql = "SHOW TABLES";
-                                $result = $conn->query($sql);
+				<div class="single-widget category">
+    <h3 class="title">Cities</h3>
+    <ul class="categor-list">
+        <?php
+        // Assuming $conn is your database connection
+        $sql = "SHOW TABLES";
+        $result = $conn->query($sql);
 
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        // Fetch table name from the result
-                                        $tableName = $row['Tables_in_cities'];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                // Fetch table name from the result
+                $tableName = $row['Tables_in_cities'];
 
-                                        // Query to fetch the area_name for each table
-                                        $areaQuery = "SELECT DISTINCT area_name FROM `$tableName`";
-                                        $areaResult = $conn->query($areaQuery);
+                // Query to check if the table has any enabled data
+                $dataQuery = "SELECT COUNT(*) as count FROM `$tableName` WHERE is_enabled = 1";
+                $dataResult = $conn->query($dataQuery);
+                $dataRow = $dataResult->fetch_assoc();
 
-                                        // Check if areas are available for the current table
-                                        if ($areaResult->num_rows > 0) {
+                // Only display the table if it contains data
+                if ($dataRow['count'] > 0) {
+                    // Query to fetch all distinct area_name values for the table
+                    $areaQuery = "SELECT DISTINCT area_name FROM `$tableName` WHERE is_enabled = 1";
+                    $areaResult = $conn->query($areaQuery);
 
-											
-                                            echo "<li class='m-2'><a href='?table=" . urlencode($tableName) . "'>
-       											 <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADoUlEQVR4nO2ab2hNYRzHP0P5kzQLS9NkLXshJV7wQivyZolSRpR/L7aMlT8JL3jByKK9EMrYWpkopZjixUr+lKIxpS0Km0LkT/7N8idXT33v7XH+3Ht379ndPbNffev5Pc9zzvl+7nnOc55zzoWhSBgzgM3ALoc2AdMJSSwHfgERH/0AyjJlJh/Y4fGLxtNKbftAhhuBWoea1XYzUyCH4vyi8ZRvgTR4gJyJAzIc2OqxzT5gSqogdTrgRaBN5bNAp8qngC6VjwJvVS5MY2jNibPNgXRBKoEmlY3ByyovBG6rPAvosECiF3u1x/AzE0CJzzFzgHUe22wDJqrPJKBGZ2o/kNffIP0VGx1nav1AgWwB6lPQCaAYGA2sla81wMiBABmX4gQSkQ4nMp0pkDz1eQeU90H12q4u20BeAMOAI8CFODoPzJOHrAUpSnI4NWY7SLHKT4FFuhFGgHvK9ylvGigQU9dq6WACkHa1zVd+TfnygQZx6k9YQRZrqWHUo7pQghRa+/j6P4H8AJ4Br5T3KH8TNpBEagoLSKfuKSus55QirZJDBTJorpH2IZDBfkZKgc8es0Y2zVoRS5/l2RV71OE78BHozRDIbx3vi/Kfyr95gPSq7bty49kVtWqsTnNozQTGS1Ez0bwooKFVrdx4dsVxx8N8UItGL6ULskH5MS+QqNnyNEFeaInhpa6AQMqtNldcUGNZALPWaA0jp2YHBFKm3Hh2xVU1lgYAcqcPQyuVJUqpcuPZFbfUONsBYl5VXlF5pw4U0YuydpVXAc8tkBq9ZnXqYZrTb528Rc+s8eyK+2oscYD0VYWaoeZ4aIEHSI8gH1v3hzZdU34gJcqNZ1c8UWOBA6TT8Qzup28WyIN+nrUKlBvPrnipxlyPaySZsK+RHT6wNwICyVVuPLvikxpHBABSoFc6Ti0LCGSEcuPZFb+0BCAAkEf9PLSQV+P5nxilju8DAqnweQV6yQOkSze4vRZYuXV8P5D3qjPeYzFBld0BgfiFvWicluQs2OAD0q064z0WU1XZkUGQHJ2FeN9ETupm6wUSPZ7xHosZqrwLjNXCsVV1zdpRIr1W/91x+mxTnw9J7rNSin4JbpW3sfIakfdYzFXldWB7ijfCTGq7vEbkPRYLVdkCTNaypDZLdUAeW+TZeI/FUlWeIzxxXp6X2JWrrW/nYYnT1oI1FhWqbMuCoVObpKJ/YqjwAgmjKmyQMUBVH/9Akw2q0tPo4Im/A2NTZ5BTAVoAAAAASUVORK5CYII=' alt='image' style='width: 25px; height: 25px; margin-right: 5px;'>
-       											 " . htmlspecialchars($tableName) . " <i class='icofont-rounded-down'></i></a></li>";
-                                            echo "<ul class='' id='tables-" . htmlspecialchars($tableName) . "'>";
+                    // Initialize an array to store area names
+                    $areaNames = [];
 
-                                            // Output each area name under the table
-                                            while ($areaRow = $areaResult->fetch_assoc()) {
-                                                echo "<li class='m-0'>" . htmlspecialchars($areaRow['area_name']) . "</a></li>";
-                                            }
+                    // Fetch all area names and store them in the array
+                    if ($areaResult->num_rows > 0) {
+                        while ($areaRow = $areaResult->fetch_assoc()) {
+                            $areaNames[] = htmlspecialchars($areaRow['area_name']);
+                        }
+                    }
 
-                                            echo "</ul></li>";
-                                        }
-                                    }
-                                } else {
-                                    echo "<li>No tables found in the 'cities' database.</li>";
-                                }
-                            ?>
-                        </ul>
-						
-                    </div>
- 
-					
-                </div>
-				
-            </div>
+                    // Convert the area names array into a comma-separated string
+                    $areaNamesString = implode(', ', $areaNames);
+
+                    // Display the table name with its associated area names
+					echo "<li class='m-2'>
+					<a href='?table=" . urlencode($tableName) . "'>
+						<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADoUlEQVR4nO2ab2hNYRzHP0P5kzQLS9NkLXshJV7wQivyZolSRpR/L7aMlT8JL3jByKK9EMrYWpkopZjixUr+lKIxpS0Km0LkT/7N8idXT33v7XH+3Ht379ndPbNffev5Pc9zzvl+7nnOc55zzoWhSBgzgM3ALoc2AdMJSSwHfgERH/0AyjJlJh/Y4fGLxtNKbftAhhuBWoea1XYzUyCH4vyi8ZRvgTR4gJyJAzIc2OqxzT5gSqogdTrgRaBN5bNAp8qngC6VjwJvVS5MY2jNibPNgXRBKoEmlY3ByyovBG6rPAvosECiF3u1x/AzE0CJzzFzgHUe22wDJqrPJKBGZ2o/kNffIP0VGx1nav1AgWwB6lPQCaAYGA2sla81wMiBABmX4gQSkQ4nMp0pkDz1eQeU90H12q4u20BeAMOAI8CFODoPzJOHrAUpSnI4NWY7SLHKT4FFuhFGgHvK9ylvGigQU9dq6WACkHa1zVd+TfnygQZx6k9YQRZrqWHUo7pQghRa+/j6P4H8AJ4Br5T3KH8TNpBEagoLSKfuKSus55QirZJDBTJorpH2IZDBfkZKgc8es0Y2zVoRS5/l2RV71OE78BHozRDIbx3vi/Kfyr95gPSq7bty49kVtWqsTnNozQTGS1Ez0bwooKFVrdx4dsVxx8N8UItGL6ULskH5MS+QqNnyNEFeaInhpa6AQMqtNldcUGNZALPWaA0jp2YHBFKm3Hh2xVU1lgYAcqcPQyuVJUqpcuPZFbfUONsBYl5VXlF5pw4U0YuydpVXAc8tkBq9ZnXqYZrTb528Rc+s8eyK+2oscYD0VYWaoeZ4aIEHSI8gH1v3hzZdU34gJcqNZ1c8UWOBA6TT8Qzup28WyIN+nrUKlBvPrnipxlyPaySZsK+RHT6wNwICyVVuPLvikxpHBABSoFc6Ti0LCGSEcuPZFb+0BCAAkEf9PLSQV+P5nxilju8DAqnweQV6yQOkSze4vRZYuXV8P5D3qjPeYzFBld0BgfiFvWicluQs2OAD0q064z0WU1XZkUGQHJ2FeN9ETupm6wUSPZ7xHosZqrwLjNXCsVV1zdpRIr1W/91x+mxTnw9J7rNSin4JbpW3sfIakfdYzFXldWB7ijfCTGq7vEbkPRYLVdkCTNaypDZLdUAeW+TZeI/FUlWeIzxxXp6X2JWrrW/nYYnT1oI1FhWqbMuCoVObpKJ/YqjwAgmjKmyQMUBVH/9Akw2q0tPo4Im/A2NTZ5BTAVoAAAAASUVORK5CYII=' alt='image' style='width: 25px; height: 25px; margin-right: 5px;'>
+						" . htmlspecialchars(ucfirst(strtolower($tableName))) . " - $areaNamesString
+					</a>
+				  </li>";
 			
+                }
+            }
+        } else {
+            echo "<li>No tables found in the 'cities' database.</li>";
+        }
+        ?>
+    </ul>
+</div>
+                </div>
+            </div>
         </div>
-		
     </div>
-
-	
-	
 </section>
+
 
 <section class="customer-reviews section" id="reviews">
     <div class="container">

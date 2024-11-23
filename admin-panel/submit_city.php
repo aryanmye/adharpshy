@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $city = trim($_POST['city']);
-    $city_table_name = preg_replace('/[^a-zA-Z0-9_]/', '_', strtolower($city));
+    $city_table_name = preg_replace('/[^A-Za-z0-9_]/', '_', strtolower($city));
 
     $sqlCreateTable = "CREATE TABLE IF NOT EXISTS `$city_table_name` (
         id INT(11) AUTO_INCREMENT PRIMARY KEY,

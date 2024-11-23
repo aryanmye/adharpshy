@@ -109,33 +109,34 @@ if (isset($_GET['delete_database'])) {
                 </div>
             </div>
             <div class="container">
-                <h3 class="text-center mb-4">Tables in the 'Cities' Database</h3>
-                <div class="row">
-                    <?php if (mysqli_num_rows($tablesResult) > 0): ?>
-                        <?php while ($tableRow = mysqli_fetch_assoc($tablesResult)): ?>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?= htmlspecialchars($tableRow["Tables_in_$dbname"]) ?></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <div class="col-lg-12">
-                            <div class="alert alert-warning" role="alert">
-                                No tables found in the 'cities' database.
+    <h3 class="text-center mb-4">Tables in the 'Cities' Database</h3><hr>
+    <div class="row">
+        <?php if (mysqli_num_rows($tablesResult) > 0): ?>
+            <?php while ($tableRow = mysqli_fetch_assoc($tablesResult)): ?>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-sm border-light rounded">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-center text-primary font-weight-bold"><?= htmlspecialchars($tableRow["Tables_in_$dbname"]) ?></h5>
+                            <p class="card-text text-muted text-center">Explore and manage the table data.</p>
+                            <!-- Button with hover effect and confirmation -->
+                            <div class="text-center">
+                                <a href="manage_services.php" 
+                                   class="btn btn-danger btn-sm">
+                                   <i class="zmdi "></i> Manage City</a>
                             </div>
                         </div>
-                    <?php endif; ?>
+                    </div><hr>
                 </div>
-                <!-- Delete Database Button -->
-                <div class="row mt-4">
-                    <div class="col-lg-12 text-center">
-                        <a href="manage_tables.php?delete_database=true" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the entire database? This action cannot be undone.');">Delete Database</a>
-                    </div>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <div class="col-lg-12">
+                <div class="alert alert-warning" role="alert">
+                    No tables found in the 'cities' database.
                 </div>
             </div>
+        <?php endif; ?>
+    </div>
+</div>
         </div>
     </section>
 
@@ -162,3 +163,46 @@ if (isset($_GET['delete_database'])) {
 <?php
 $conn->close();
 ?>
+<style>
+    /* Card styling enhancements */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Title font adjustments */
+.card-title {
+    font-size: 1.25rem;
+    color: #007bff; /* Bootstrap primary color */
+}
+
+/* Button styles */
+.btn-danger {
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #e74c3c;
+    transform: scale(1.05);
+}
+
+/* Hover effect for the card when deleting */
+.card .btn-danger i {
+    margin-right: 5px;
+}
+
+</style>

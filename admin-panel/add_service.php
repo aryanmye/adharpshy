@@ -1,17 +1,17 @@
 <?php
-include 'coniection_service.php';
+include 'connection_service.php';
 
-// coniect to MySQL server and select the 'cities' database
-$coni = new mysqli($servername, $username, $password, 'cities');
+// connect to MySQL server and select the 'cities' database
+$conn = new mysqli($servername, $username, $password, 'cities');
 
-// Check for coniection
-if ($coni->coniect_error) {
-    die("coniection failed: " . $coni->coniect_error);
+// Check for connection
+if ($conn->connect_error) {
+    die("connection failed: " . $conn->connect_error);
 }
 
 // Query to fetch table names from the 'cities' database
 $sql = "SHOW TABLES";
-$result = $coni->query($sql);
+$result = $conn->query($sql);
 
 $options = '';
 if ($result->num_rows > 0) {
@@ -26,7 +26,7 @@ if ($result->num_rows > 0) {
     $options = "<option>No cities found</option>";
 }
 
-$coni->close();
+$conn->close();
 ?>
 
 <!doctype html>
@@ -45,7 +45,7 @@ $coni->close();
     <link rel="stylesheet" href="assets/plugins/summernote/dist/summernote.css"/>
 
     <!-- Add Material Design Icon Font (for hamburger menu icon) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Material-Design-Iconic-Font/5.0.0/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Material-Design-Iconnc-Font/5.0.0/css/material-design-iconnc-font.min.css">
 
     <style>
         /* Mobile Menu Button Styling */

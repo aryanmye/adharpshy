@@ -1,20 +1,9 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "cities";
-
-// Create a connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'admin-panel/connection_service.php';
 
 // Fetch all table names in the database
 $sql = "SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '$dbname'";
-$tables_result = $conn->query($sql);
+$tables_result = $coni->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -207,66 +196,66 @@ $tables_result = $conn->query($sql);
 			</div>
 			<!--/ End Header Inner -->
 		</header>
-    <section class="services section" id="services">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title text-center">
-                        <h2>Explore Our Comprehensive Services</h2>
-                        <img src="img/section-img.png" alt="#" class="img-fluid">
-                    </div>
+        <section class="services section" id="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title text-center">
+                    <h2>Explore Our Comprehensive Services</h2>
+                    <img src="img/section-img.png" alt="#" class="img-fluid">
                 </div>
             </div>
+        </div>
 
-            <div class="row">
-                <?php
-                if ($tables_result->num_rows > 0) {
-                    while ($table = $tables_result->fetch_assoc()) {
-                        $tableName = $table['table_name'];
+        <div class="row">
+            <?php
+            if ($tables_result->num_rows > 0) {
+                while ($table = $tables_result->fetch_assoc()) {
+                    $tableName = $table['table_name'];
+
+                    // Check if the table contains enabled data
+                    $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
+                    $result = $coni->query($sql);
+
+                    if ($result->num_rows > 0) {
                         ?>
                         <!-- Display table name as section header -->
                         <div class="col-12">
-						<h5 class="table-name-title text-center"><?php echo htmlspecialchars(ucfirst($tableName)); ?> Services</h5>
-						<hr>
+                            <h5 class="table-name-title text-center"><?php echo htmlspecialchars(ucfirst($tableName)); ?> Services</h5>
+                            <hr>
                         </div>
                         <?php
-                        // Get the services from each table where `is_enabled` is 1
-                        $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
-                        $result = $conn->query($sql);
-
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
-                                ?>
-                                <div class="col-lg-4 col-md-6 col-12">
-                                    <!-- Service Card -->
-                                    <div class="service-card">
-                                        <img src="<?php echo !empty($imgSrc) ? $imgSrc : 'img/empty_image.jpg'; ?>" alt="Service Image">
-                                        <div class="service-card-body">
-                                            <h5 class="service-card-title"><?php echo htmlspecialchars(ucfirst($row['service_title'])); ?></h5>
-											<span class="date">Published on: <?php echo htmlspecialchars($row['created_at']); ?></span>
-                                            <p class="service-card-description"><?php echo htmlspecialchars(substr(strip_tags($row['service_discription']), 0, 150)) . '...'; ?></p>
-                                            <div class="service-card-footer">
-											<a href="services_details.php?service_name=<?php echo htmlspecialchars($row['service_title']); ?>" class="btn" style="color:white;">Learn More</a>
-											
-                                            </div>
+                        // Display services
+                        while ($row = $result->fetch_assoc()) {
+                            $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
+                            ?>
+                            <div class="col-lg-4 col-md-6 col-12">
+                                <!-- Service Card -->
+                                <div class="service-card">
+                                    <img src="<?php echo file_exists("uploado/" . $row['image_path']) ? $imgSrc : 'img/empty_image.jpg'; ?>" alt="Service Image">
+                                    <div class="service-card-body">
+                                        <h5 class="service-card-title"><?php echo htmlspecialchars(ucfirst($row['service_title'])); ?></h5>
+                                        <span class="date">Published on: <?php echo htmlspecialchars($row['created_at']); ?></span>
+                                        <p class="service-card-description"><?php echo htmlspecialchars(substr(strip_tags($row['service']), 0, 150)); ?></p>
+                                        <div class="service-card-footer">
+                                            <a href="services_details.php?service_name=<?php echo htmlspecialchars($row['service_title']); ?>" class="btn" style="color:white;">Learn More</a>
                                         </div>
                                     </div>
                                 </div>
-                                <?php
-                            }
-                        } else {
-                            echo "<p>No services found in table: $tableName</p>";
+                            </div>
+                            <?php
                         }
                     }
-                } else {
-                    echo "<p>No tables found in the database.</p>";
                 }
-                $conn->close();
-                ?>
-            </div>
+            } else {
+                echo "<p>No tables found in the database.</p>";
+            }
+            $coni->close();
+            ?>
         </div>
-    </section>
+    </div>
+</section>
+
 
     <?php include 'footer.php'; ?>
 

@@ -9,6 +9,112 @@ if (!isset($_SESSION['admin_id']) || !isset($_SESSION['logged_in']) || $_SESSION
 }
 
 
+// Database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "cities";  // Assume the database name is 'cities'
+
+// Establish connection
+$coni = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($coni->connect_error) {
+    die("Connection failed: " . $coni->connect_error);
+}
+
+// Query to fetch all table names from the 'cities' database
+$sql1 = "SHOW TABLES";
+$tablesResult = mysqli_query($coni, $sql1);
+
+// Check if the query was successful
+if ($tablesResult === false) {
+    echo "Error executing query: " . mysqli_error($coni);
+    exit();
+}
+
+$totalEnabledServices = 0; // Variable to keep track of enabled services count
+$totaldisabledServices = 0; // Variable to keep track of disabled services count
+$totalCities = 0; // Variable to keep track of total cities count
+
+// Loop through the tables and fetch data dynamically
+while ($tableRow = mysqli_fetch_assoc($tablesResult)) {
+    $tableName = $tableRow['Tables_in_' . $dbname];  // Table name (e.g., 'kolhapur')
+
+    // Query to count enabled services in the table
+    $sql2 = "SELECT COUNT(*) AS enabled_count FROM `$tableName` WHERE `is_enabled` = 1";
+    $que2 = mysqli_query($coni, $sql2);
+
+    // Check if the query was successful
+    if ($que2 === false) {
+        echo "Error executing query for table $tableName: " . mysqli_error($coni);
+        continue;
+    }
+
+    // Fetch the count of enabled services
+    $row2 = mysqli_fetch_assoc($que2);
+    $enabledCount = $row2['enabled_count'];
+
+    // Add to the total enabled services count
+    $totalEnabledServices += $enabledCount;
+
+
+
+
+
+        // Query to count enabled services in the table
+        $sql4 = "SELECT COUNT(*) AS disable_count FROM `$tableName` WHERE `is_enabled` = 0";
+        $que4 = mysqli_query($coni, $sql4);
+    
+        // Check if the query was successful
+        if ($que2 === false) {
+            echo "Error executing query for table $tableName: " . mysqli_error($coni);
+            continue;
+        }
+    
+        // Fetch the count of enabled services
+        $row4 = mysqli_fetch_assoc($que4);
+        $disableCount = $row4['disable_count'];
+    
+        // Add to the total enabled services count
+        $totaldisabledServices += $disableCount;
+
+
+
+    // Query to count the total cities (rows) in the table
+    $sql3 = "SELECT COUNT(*) AS city_count FROM `$tableName`";
+    $que3 = mysqli_query($coni, $sql3);
+
+    // Check if the query was successful
+    if ($que3 === false) {
+        echo "Error executing query for city count in table $tableName: " . mysqli_error($coni);
+        continue;
+    }
+
+    // Fetch the count of cities
+    $row3 = mysqli_fetch_assoc($que3);
+    $cityCount = $row3['city_count'];
+
+    // Add to the total cities count
+    $totalCities += $cityCount;
+}
+
+// Query to count the number of tables (cities) inside the 'cities' database
+$sql4 = "SELECT COUNT(*) AS table_count FROM information_schema.tables WHERE table_schema = '$dbname'";
+$result4 = mysqli_query($coni, $sql4);
+
+// Check if the query was successful
+if ($result4 === false) {
+    echo "Error executing query for table count in database: " . mysqli_error($coni);
+    exit();
+}
+
+// Fetch the count of tables (cities)
+$row4 = mysqli_fetch_assoc($result4);
+$tableCount = $row4['table_count'];
+
+// Close the connection
+$coni->close();
 ?>
 
 <!doctype html>
@@ -140,33 +246,31 @@ include 'leftaside.php';
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card widget_2 big_icon pen">
-                        <div class="body">
-                            <h6>Services</h6>
-                            <?php
-                      $que="SELECT service_id from services ORDER BY service_id" ;
-                      $run=mysqli_query($conn,$que);
-                      $service_row=mysqli_num_rows($run);
-                       echo '<h2>'.$service_row.'</h2>';
+    <div class="card widget_2 big_icon pen">
+        <div class="body">
+            <h6>Enabled Services</h6>
+            <h2><?php echo $totalEnabledServices; ?></h2>
+        </div>
+    </div>
+</div>
 
-                      ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card widget_2 big_icon">
-                        <div class="body">
-                            <h6>Cities</h6>
-                            <?php
-                      $que="SELECT city_id from cities ORDER BY city_id" ;
-                   $run=mysqli_query($conn,$que);
-                       $city_row=mysqli_num_rows($run);
-                       echo '<h2>'.$city_row.'</h2>';
+<div class="col-lg-3 col-md-6 col-sm-12">
+    <div class="card widget_2 big_icon pen">
+        <div class="body">
+            <h6>Disabled Services</h6>
+            <h2><?php echo $totaldisabledServices; ?></h2>
+        </div>
+    </div>
+</div>
 
-                      ?> 
-                        </div>
-                    </div>
-                </div>
+<div class="col-lg-3 col-md-6 col-sm-12">
+    <div class="card widget_2 big_icon pen">
+        <div class="body">
+            <h6>Total Cities</h6>
+            <h2><?php echo $tableCount; ?></h2>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </div>
