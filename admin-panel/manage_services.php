@@ -205,12 +205,3 @@ if ($coni->connect_error) {
 </body>
 </html>
 <style></style>
-<div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card widget_2 big_icon pen">
-                        <div class="body">
-                            <h6>Services</h6>
-                            <h2>no of services</h2>
-
-                        </div>
-                    </div>
-</div>
