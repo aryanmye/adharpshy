@@ -234,11 +234,11 @@ $tables_result = $coni->query($sql);
                                 <div class="service-card">
                                     <img src="<?php echo file_exists("uploado/" . $row['image_path']) ? $imgSrc : 'img/empty_image.jpg'; ?>" alt="Service Image">
                                     <div class="service-card-body">
-                                        <h5 class="service-card-title"><?php echo htmlspecialchars(ucfirst($row['service_title'])); ?></h5>
+                                        <h5 class="service-card-title"><?php echo htmlspecialchars(ucfirst($row['service_title'])); ?>...</h5>
                                         <span class="date">Published on: <?php echo htmlspecialchars($row['created_at']); ?></span>
                                         <p class="service-card-description"><?php echo htmlspecialchars(substr(strip_tags($row['service']), 0, 150)); ?></p>
                                         <div class="service-card-footer">
-                                            <a href="services_details.php?service_name=<?php echo htmlspecialchars($row['service_title']); ?>" class="btn" style="color:white;">Learn More</a>
+                                        <a href="services_details.php?table=<?php echo urlencode($tableName); ?>&service_name=<?php echo urlencode($row['service_title']); ?>" class="btn" style="color:white;">Learn More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -263,3 +263,12 @@ $tables_result = $coni->query($sql);
     <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
+<style>
+    .service-card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Limit to 2 lines, change this number as needed */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
