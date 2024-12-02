@@ -61,7 +61,7 @@ if (isset($_GET['title'])) {
 									<!-- Meta -->
 									<div class="meta">
 										<div class="meta-left">
-											<span class="author"><a href="#"><img src="img/author1.jpg" alt="#"><?= ucfirst($row9['author']) ?></a></span>
+											<span class="author"><a href="#"><img src="img/.jpg" alt="#"><?= ucfirst($row9['author']) ?></a></span>
 											<span class="date"><i class="fa fa-clock-o"></i><?= ucfirst($row9['publish_date']) ?></span>
 										</div>
 										

@@ -1,12 +1,12 @@
 ﻿<?php
 include "connection.php";
 
-// Check if user is logged in (assuming session variable 'user_id' or 'logged_in' is set on successful login)
-if (!isset($_SESSION['admin_id']) || !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    // Redirect to sign-in.php if user is not logged in
-    header("Location: sign-in.php");
-    exit(); // Make sure no further code is executed after the redirect
-}
+// // Check if user is logged in (assuming session variable 'user_id' or 'logged_in' is set on successful login)
+// if (!isset($_SESSION['admin_id']) || !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+//     // Redirect to sign-in.php if user is not logged in
+//     header("Location: sign-in.php");
+//     exit(); // Make sure no further code is executed after the redirect
+// }
 
 
 // Database connection details

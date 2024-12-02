@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
         $result = mysqli_query($conn, $sql3);
 
         if ($result) {
-            header("Location: dashboard.php"); 
+            header("Location: manage_cities.php"); 
             exit(); 
         } else {
            

@@ -12,17 +12,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "adharblog";
 
-$coni = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($coni->connect_error) {
-    die("Connection failed: " . $coni->connect_error);
-}
 ?>
 
 

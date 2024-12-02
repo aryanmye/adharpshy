@@ -1,28 +1,13 @@
 <?php
-include('connection_service.php');
+include 'connection.php';
 
-if (isset($_GET['db']) && isset($_GET['table']) && isset($_GET['id']) && isset($_GET['service'])) {
-    // Capture parameters from the URL
-    $db = $_GET['db'];
-    $table = $_GET['table'];
-    $id = intval($_GET['id']); // Ensure ID is treated as an integer
-    $service = $_GET['service'];
-    
-    // Sanitize database and table names to prevent SQL injection
-    $db = mysqli_real_escape_string($coni, $db);
-    $table = mysqli_real_escape_string($coni, $table);
-    $service = mysqli_real_escape_string($coni, $service);
-    
-    // Connect to the specified database
-    mysqli_select_db($coni, $db);
-    
-    // Delete query with dynamic table, ID, and service filtering
-    $sql = "DELETE FROM `$table` WHERE `id` = '$id' AND `service` = '$service'";
-    $result = mysqli_query($coni, $sql);
+if (isset($_GET['id'])) {
+    $id = intval($_GET['id']); // Ensure ID is an integer to prevent SQL injection
 
-    if ($result) {
-      
-        echo "<!-- Bootstrap CSS Link -->
+    $sql3 = "DELETE FROM services WHERE service_id = '$id'";
+    if (mysqli_query($conn, $sql3)) {
+        echo "
+        <!-- Bootstrap CSS Link -->
         <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' rel='stylesheet'>
 
         <!-- Success Modal -->
@@ -39,7 +24,7 @@ if (isset($_GET['db']) && isset($_GET['table']) && isset($_GET['id']) && isset($
                         <p>Record deleted successfully!</p>
                     </div>
                     <div class='modal-footer'>
-                        <a href='manage_services.php' class='btn btn-primary'>Go Back</a>
+                        <a href='table_service_detail.php' class='btn btn-primary'>Go Back</a>
                     </div>
                 </div>
             </div>
@@ -55,17 +40,12 @@ if (isset($_GET['db']) && isset($_GET['table']) && isset($_GET['id']) && isset($
             $(document).ready(function() {
                 $('#successModal').modal('show');
             });
-        </script>";
-    
+        </script>
+        ";
     } else {
-        echo "Error deleting record: " . mysqli_error($coni);
+        echo "Error deleting record: " . mysqli_error($conn);
     }
 } else {
-    echo "Required parameters (db, table, id, service) are missing.";
+    echo "No ID provided";
 }
 ?>
-    <script>
-        function goBack() {
-            history.back(); // Navigate to the previous page
-        }
-    </script>

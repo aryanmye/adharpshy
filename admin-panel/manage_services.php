@@ -146,9 +146,11 @@ if ($coni->connect_error) {
                                                        class='btn btn-danger btn-sm' 
                                                        onclick='return confirm(\"Are you sure you want to delete this service?\");'>Delete</a>
                                                     <a href='toggle_service.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "&created_at=" . urlencode($row2['created_at']) . "&table=" . urlencode($tableName) . "' 
-                                                       class='btn btn-warning btn-sm toggle-service' data-service-id='" . htmlspecialchars($row2['id']) . "'>
-                                                        " . ($row2['is_enabled'] == 1 ? 'Disable' : 'Enable') . "
-                                                    </a>
+   class='btn btn-sm toggle-service' data-service-id='" . htmlspecialchars($row2['id']) . "' 
+   style='background-color: " . ($row2['is_enabled'] == 1 ? '#28a745' : '#FD0D0D') . "; color: white;'>
+    " . ($row2['is_enabled'] == 1 ? 'Disable' : 'Enable') . "
+</a>
+
                                                 </div>
                                             </div>
                                         </div>
