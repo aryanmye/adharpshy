@@ -33,6 +33,8 @@ $tables_result = $coni->query($sql);
     <link rel="stylesheet" href="css/responsive.css">
 
     <style>
+
+        
         /* Custom Styles for Service Cards */
         .service-card {
             border: 1px solid #ddd;
@@ -209,7 +211,7 @@ if ($tables_result->num_rows > 0) {
         $serviceCount = $serviceCheckResult->fetch_assoc()['count'];
 
         if ($serviceCount > 0) { // Only include table if it has services
-            echo '<li style="margin: 0 10px; list-style: none; display: inline-block;">
+            echo '<li  class="hovv" style="margin: 0 10px; list-style: none; display: inline-block;">
             <a href="#' . htmlspecialchars($tableName) . '" 
                style="
                    text-decoration: none; 
@@ -245,7 +247,7 @@ if ($tables_result->num_rows > 0) {
 }
 
 /* Hover effect */
-header nav ul li a:hover {
+.hovv a:hover {
     color: #ffffff; /* White text on hover */
     background-color: #474747; /* Match hover color */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly intensified shadow */
