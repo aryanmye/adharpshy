@@ -198,6 +198,10 @@ $conn->close();
                                         <input type="file" name="image" id="image" class="form-control" placeholder="Choose an Image" required />
                                     </div>
 
+									<div class="form-group">
+										<input type="date" id="publish_date" name="publish_date" class="form-control" placeholder="Date" required style="width:20%;">
+									</div>
+
                                 </div>
                             </div>
 

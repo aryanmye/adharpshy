@@ -11,34 +11,25 @@ if ($conn->connect_error) {
 
 // Handling the form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get form data
-    $category = $_POST['category']; // The selected city/database
+    $category = $_POST['category'];
     $area_name = $_POST['area_name'];
     $service_title = $_POST['service_title'];
-    $service_name = $_POST['service_name']; // Ensure this matches the input name
-    $service_disc = $_POST['service_disc']; // Ensure this matches the input name
-    $is_enabled = isset($_POST['is_enabled']) ? 1 : 0; // Default to 1 if not provided
-    
-    // Image upload handling
+    $service_name = $_POST['service_name'];
+    $service_disc = $_POST['service_disc'];
+    $publish_date = $_POST['publish_date'];
+
     $filename = $_FILES['image']['name'];
     $tmpname = $_FILES['image']['tmp_name'];
     $size = $_FILES['image']['size'];
-    
-    // Define upload paths
-    $adminPanelUploadPath = "upload/" . basename($filename);  // Inside admin-panel folder
-    $externalUploadPath = "../uploado/" . basename($filename);  // Outside admin-panel folder
 
-    // Validate file size (limit: 20MB)
+    $adminPanelUploadPath = "upload/" . basename($filename);
+    $externalUploadPath = "../uploado/" . basename($filename);
+
     if ($size <= 20000000) {
-        // Move the file to the 'admin-panel' upload folder
         if (move_uploaded_file($tmpname, $adminPanelUploadPath)) {
-            // Copy the file to the 'uploado' folder outside the admin-panel
             if (copy($adminPanelUploadPath, $externalUploadPath)) {
-
-                // Prepare and execute SQL query to insert data into the selected city's table
-                // Use prepared statements to avoid SQL injection
-                $stmt = $conn->prepare("INSERT INTO `$category` (area_name, service_title, service_discription, service, image_path) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssss", $area_name, $service_title, $service_disc, $service_name, $filename);
+                $stmt = $conn->prepare("INSERT INTO `$category` (area_name, service_title, service_discription, service, image_path, publish_date) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssssss", $area_name, $service_title, $service_disc, $service_name, $filename, $publish_date);
 
                 if ($stmt->execute()) {
                     echo "New Service added successfully!";

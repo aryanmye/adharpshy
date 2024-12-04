@@ -211,24 +211,12 @@ if ($tables_result->num_rows > 0) {
         $serviceCount = $serviceCheckResult->fetch_assoc()['count'];
 
         if ($serviceCount > 0) { // Only include table if it has services
-            echo '<li  class="hovv" style="margin: 0 10px; list-style: none; display: inline-block;">
-            <a href="#' . htmlspecialchars($tableName) . '" 
-               style="
-                   text-decoration: none; 
-                   font-size: 1rem; 
-                   font-weight: 600; 
-                   color: ##474747; 
-                   padding: 8px 20px; 
-                   border-radius: 5px; 
-                   border: 1px solid ##474747; 
-                   background-color: ##474747;
-                   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); 
-                   transition: all 0.3s ease-in-out;
-                   ">
-               ' . ucfirst($tableName) . '
-            </a>
-        </li>';
-    
+            echo '<li class="hovv btn" style="margin: 0 10px; list-style: none; display: inline-block;">
+                    <a href="#' . htmlspecialchars($tableName) . '" 
+                       >
+                       ' . ucfirst($tableName) . '
+                    </a>
+                  </li>';
         }
     }
     echo '</ul>
@@ -236,6 +224,7 @@ if ($tables_result->num_rows > 0) {
     </header>';
 }
 ?>
+
 
 
 <style>
@@ -249,7 +238,7 @@ if ($tables_result->num_rows > 0) {
 /* Hover effect */
 .hovv a:hover {
     color: #ffffff; /* White text on hover */
-    background-color: #474747; /* Match hover color */
+    background-color: black; /* Black background on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly intensified shadow */
     transform: translateY(-3px); /* Subtle lift */
 }
@@ -261,38 +250,46 @@ if ($tables_result->num_rows > 0) {
 
             
 <?php
-            // Display services
-            $tables_result->data_seek(0); // Reset the result pointer
-            while ($table = $tables_result->fetch_assoc()) {
-                $tableName = $table['table_name'];
-                $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
-                $result = $coni->query($sql);
+// Display services
+$tables_result->data_seek(0); // Reset the result pointer
+while ($table = $tables_result->fetch_assoc()) {
+    $tableName = $table['table_name'];
+    $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
+    $result = $coni->query($sql);
 
-                if ($result->num_rows > 0) {
-                    echo '<div id="' . htmlspecialchars($tableName) . '" class="col-12">
-                        <h5 class="table-name-title text-center">' . ucfirst($tableName) . ' Services</h5>
-                        <hr>
-                    </div>';
+    if ($result->num_rows > 0) {
+        echo '<div id="' . htmlspecialchars($tableName) . '" class="col-12">
+            <h5 class="table-name-title text-center">' . ucfirst($tableName) . ' Services</h5>
+            <hr>
+        </div>';
 
-                    while ($row = $result->fetch_assoc()) {
-                        $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
-                        echo '<div class="col-lg-4 col-md-6 col-12">
-                                <div class="service-card">
-                                    <img src="' . (file_exists($imgSrc) ? $imgSrc : 'img/empty_image.jpg') . '" alt="Service Image">
-                                    <div class="service-card-body">
-                                        <h5 class="service-card-title">' . htmlspecialchars(ucfirst($row['service_title'])) . '...</h5>
-                                        <span class="date">Published on: ' . htmlspecialchars($row['created_at']) . '</span>
-                                        <p class="service-card-description">' . htmlspecialchars(substr(strip_tags($row['service']), 0, 150)) . '</p>
-                                        <div class="service-card-footer">
-                                            <a href="services_details.php?table=' . urlencode($tableName) . '&service_name=' . urlencode($row['service_title']) . '" class="btn" style="color:white;">Learn More</a>
-                                        </div>
-                                    </div>
+        while ($row = $result->fetch_assoc()) {
+            $publishDate = $row['publish_date'];
+            $currentDate = date('Y-m-d'); // Get today's date
+
+            // Check if publish_date is less than or equal to today's date
+            if ($publishDate <= $currentDate) {
+                $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
+                echo '<div class="col-lg-4 col-md-6 col-12">
+                        <div class="service-card">
+                            <img src="' . (file_exists($imgSrc) ? $imgSrc : 'img/empty_image.jpg') . '" alt="Service Image">
+                            <div class="service-card-body">
+                                <h5 class="service-card-title">' . htmlspecialchars(ucfirst($row['service_title'])) . '</h5>
+                                <span class="date">Published on: ' . htmlspecialchars($row['publish_date']) . '</span>
+                                <p class="service-card-description">' . htmlspecialchars(substr(strip_tags($row['service']), 0, 150)) . '...</p>
+                                <div class="service-card-footer">
+                                    <a href="services_details.php?table=' . urlencode($tableName) . '&service_name=' . urlencode($row['service_title']) . '" class="btn" style="color:white;">Learn More</a>
                                 </div>
-                              </div>';
-                    }
-                }
+                            </div>
+                        </div>
+                      </div>';
             }
-            ?>
+        }
+    }
+}
+?>
+
+
         </div>
     </div>
 </section>

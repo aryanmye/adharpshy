@@ -21,7 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         service_discription TEXT,
         image_path LONGBLOB,
         is_enabled BINARY(1) DEFAULT 1 NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        publish_date date
     )";
 
     if ($conn->query($sqlCreateTable) === TRUE) {

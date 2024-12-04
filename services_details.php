@@ -17,8 +17,6 @@ if ($conn->connect_error) {
 
 
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,7 +163,7 @@ if ($conn->connect_error) {
     <body>
 	
 		<!-- Preloader -->
-        <div class="preloader">
+        <!-- <div class="preloader">
             <div class="loader">
                 <div class="loader-outter"></div>
                 <div class="loader-inner"></div>
@@ -177,7 +175,7 @@ if ($conn->connect_error) {
                     </svg>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- End Preloader -->
 		
 		<!-- Get Pro Button -->
@@ -290,47 +288,55 @@ if ($conn->connect_error) {
                 <div class="row">
                     <div class="col-12">
                         <div class="single-main">
-                            <?php
-                                // Fetch table name from the query parameter
-                                $tableName = isset($_GET['table']) ? $_GET['table'] : null;
-                                $allEnabledData = [];
+<?php
+    // Fetch table name from the query parameter
+    $tableName = isset($_GET['table']) ? $_GET['table'] : null;
+    $allEnabledData = [];
 
-                                if ($tableName) {
-                                    // Fetch all enabled data from the specified table
-                                    $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
-                                    $result = $conn->query($sql);
-                                    if ($result->num_rows > 0) {
-                                        $allEnabledData[$tableName] = $result->fetch_all(MYSQLI_ASSOC);
-                                    }
-                                }
+    if ($tableName) {
+        // Fetch all enabled data from the specified table
+        $sql = "SELECT * FROM `$tableName` WHERE is_enabled = 1";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $allEnabledData[$tableName] = $result->fetch_all(MYSQLI_ASSOC);
+        }
+    }
 
-                                if (!empty($allEnabledData)) {
-                                    foreach ($allEnabledData as $table => $data) {
-                                        foreach ($data as $row) {
-                                            echo '<div class="news-head">';
-                                            $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
-                                            $imgSrc = str_replace(' ', '%20', $imgSrc);
+    if (!empty($allEnabledData)) {
+        foreach ($allEnabledData as $table => $data) {
+            foreach ($data as $row) {
+                // Get the publish date and check if it's valid
+                $publishDate = $row['publish_date'];
+                $currentDate = date('Y-m-d'); // Get current date
 
-                                            if (file_exists("uploado/" . $row['image_path'])) {
-                                                echo "<img src='$imgSrc' alt='Service Image' style='height: 335px;width: 665px;'>";
-                                            } else {
-                                                echo "<img src='img/blog2.jpg' alt='Placeholder Image'>";
-                                            }
-                                            echo '</div>';
-                                            echo '<h1 class="news-title">' . htmlspecialchars($row['service_title']) . ' in ' . htmlspecialchars($row['area_name']) . '</h1>';
-                                            echo '<div class="meta">';
-                                            echo '<span class="date"><i class="fa-solid fa-notes-medical"></i> ' . ucfirst($row['service']) . '</span>';
-                                            echo '<span class="date"><i class="fas fa-map-marker-alt"></i> ' . ucfirst($row['area_name']) . '</span>';
-                                            echo '<span class="author"><i class="fa fa-clock-o"></i> ' . ucfirst($row['created_at']) . '</span>';
-                                            echo '</div>';
-                                            echo '<div class="news-text"><p>' . ucfirst($row['service_discription']) . '</p></div>';
-                                            echo '<hr>';
-                                        }
-                                    }
-                                } else {
-                                    echo '<p>No services available for this category.</p>';
-                                }
-                            ?>
+                // Only proceed if the publish_date is less than or equal to the current date
+                if ($publishDate <= $currentDate) {
+                    echo '<div class="news-head">';
+                    $imgSrc = "uploado/" . htmlspecialchars($row['image_path']);
+                    $imgSrc = str_replace(' ', '%20', $imgSrc);
+
+                    if (file_exists("uploado/" . $row['image_path'])) {
+                        echo "<img src='$imgSrc' alt='Service Image' style='height: 335px;width: 665px;'>";
+                    } else {
+                        echo "<img src='img/blog2.jpg' alt='Placeholder Image'>";
+                    }
+                    echo '</div>';
+                    echo '<h1 class="news-title">' . htmlspecialchars($row['service_title']) . ' in ' . htmlspecialchars($row['area_name']) . '</h1>';
+                    echo '<div class="meta">';
+                    echo '<span class="date"><i class="fa-solid fa-notes-medical"></i> ' . ucfirst($row['service']) . '</span>';
+                    echo '<span class="date"><i class="fas fa-map-marker-alt"></i> ' . ucfirst($row['area_name']) . '</span>';
+                    echo '<span class="author"><i class="fa fa-clock-o"></i> ' . ucfirst($row['publish_date']) . '</span>';
+                    echo '</div>';
+                    echo '<div class="news-text"><p>' . ucfirst($row['service_discription']) . '</p></div>';
+                    echo '<hr>';
+                }
+            }
+        }
+    } else {
+        echo '<p>No services available for this category.</p>';
+    }
+?>
+
                         </div>
                     </div>
                 </div>
@@ -342,55 +348,68 @@ if ($conn->connect_error) {
                     <div class="single-widget category">
                         <h3 class="title">Cities and Areas</h3>
                         <ul class="categor-list">
-                            <?php
-                            // Fetch all tables and display their area names if data exists
-                            $sql = "SHOW TABLES";
-                            $result = $conn->query($sql);
+<?php
+// Fetch all tables and display their area names if data exists
+$sql = "SHOW TABLES";
+$result = $conn->query($sql);
 
-                            // Check if the query was successful
-                            if ($result) {
-                                // Loop through the tables in the result
-                                while ($row = $result->fetch_row()) {
-                                    // Get the table name, which is the first column in the row
-                                    $tableName = $row[0];
+// Check if the query was successful
+if ($result) {
+    // Loop through the tables in the result
+    while ($row = $result->fetch_row()) {
+        // Get the table name, which is the first column in the row
+        $tableName = $row[0];
 
-                                    // Query to check if the table has any enabled data
-                                    $dataQuery = "SELECT COUNT(*) as count FROM `$tableName` WHERE is_enabled = 1";
-                                    $dataResult = $conn->query($dataQuery);
-                                    $dataRow = $dataResult->fetch_assoc();
+        // Query to check if the table has any enabled data
+        $dataQuery = "SELECT COUNT(*) as count FROM `$tableName` WHERE is_enabled = 1";
+        $dataResult = $conn->query($dataQuery);
+        $dataRow = $dataResult->fetch_assoc();
 
-                                    // Only display the table if it contains data
-                                    if ($dataRow['count'] > 0) {
-                                        // Query to fetch all distinct area_name values for the table
-                                        $areaQuery = "SELECT DISTINCT area_name FROM `$tableName` WHERE is_enabled = 1";
-                                        $areaResult = $conn->query($areaQuery);
+        // Only display the table if it contains data
+        if ($dataRow['count'] > 0) {
+            // Query to fetch all distinct area_name values for the table
+            $areaQuery = "SELECT DISTINCT area_name, publish_date FROM `$tableName` WHERE is_enabled = 1";
+            $areaResult = $conn->query($areaQuery);
 
-                                        // Initialize an array to store area names
-                                        $areaNames = [];
+            // Initialize an array to store area names
+            $areaNames = [];
 
-                                        // Fetch all area names and store them in the array
-                                        if ($areaResult->num_rows > 0) {
-                                            while ($areaRow = $areaResult->fetch_assoc()) {
-                                                $areaNames[] = htmlspecialchars($areaRow['area_name']);
-                                            }
-                                        }
+            // Fetch all area names and store them in the array
+            if ($areaResult->num_rows > 0) {
+                while ($areaRow = $areaResult->fetch_assoc()) {
+                    // Check if publish_date is less than or equal to the current date
+                    $publishDate = $areaRow['publish_date'];
+                    $currentDate = date('Y-m-d'); // Get current date
 
-                                        // Convert the area names array into a comma-separated string
-                                        $areaNamesString = implode(', ', $areaNames);
+                    // Only include the area name if the publish_date is valid
+                    if ($publishDate <= $currentDate) {
+                        $areaNames[] = htmlspecialchars($areaRow['area_name']);
+                    }
+                }
+            }
 
-                                        // Display the city name with its associated area names
-                                        echo "<li class='m-2'>
-                                            <a href='?table=" . urlencode($tableName) . "'>
-                                                <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADoUlEQVR4nO2ab2hNYRzHP0P5kzQLS9NkLXshJV7wQivyZolSRpR/L7aMlT8JL3jByKK9EMrYWpkopZjixUr+lKIxpS0Km0LkT/7N8idXT33v7XH+3Ht379ndPbNffev5Pc9zzvl+7nnOc55zzoWhSBgzgM3ALoc2AdMJSSwHfgERH/0AyjJlJh/Y4fGLxtNKbftAhhuBWoea1XYzUyCH4vyi8ZRvgTR4gJyJAzIc2OqxzT5gSqogdTrgRaBN5bNAp8qngC6VjwJvVS5MY2jNibPNgXRBKoEmlY3ByyovBG6rPAvosECiF3u1x/AzE0CJzzFzgHUe22wDJqrPJKBGZ2o/kNffIP0VGx1nav1AgWwB6lPQCaAYGA2sla81wMiBABmX4gQSkQ4nMp0pkDz1eQeU90H12q4u20BeAMOAI8CFODoPzJOHrAUpSnI4NWY7SLHKT4FFuhFGgHvK9ylvGigQU9dq6WACkHa1zVd+TfnygQZx6k9YQRZrqWHUo7pQghRa+/j6P4H8AJ4Br5T3KH8TNpBEagoLSKfuKSus55QirZJDBTJorpH2IZDBfkZKgc8es0Y2zVoRS5/l2RV71OE78BHozRDIbx3vi/Kfyr95gPSq7bty49kVtWqsTnNozQTGS1Ez0bwooKFVrdx4dsVxx8N8UItGL6ULskH5MS+QqNnyNEFeaInhpa6AQMqtNldcUGNZALPWaA0jp2YHBFKm3Hh2xVU1lgYAcqcPQyuVJUqpcuPZFbfUONsBYl5VXlF5pw4U0YuydpVXAc8tkBq9ZnXqYZrTb528Rc+s8eyK+2oscYD0VYWaoeZ4aIEHSI8gH1v3hzZdU34gJcqNZ1c8UWOBA6TT8Qzup28WyIN+nrUKlBvPrnipxlyPaySZsK+RHT6wNwICyVVuPLvikxpHBABSoFc6Ti0LCGSEcuPZFb+0BCAAkEf9PLSQV+P5nxilju8DAqnweQV6yQOkSze4vRZYuXV8P5D3qjPeYzFBld0BgfiFvWicluQs2OAD0q064z0WU1XZkUGQHJ2FeN9ETupm6wUSPZ7xHosZqrwLjNXCsVV1zdpRIr1W/91x+mxTnw9J7rNSin4JbpW3sfIakfdYzFXldWB7ijfCTGq7vEbkPRYLVdkCTNaypDZLdUAeW+TZeI/FUlWeIzxxXp6X2JWrrW/nYYnT1oI1FhWqbMuCoVObpKJ/YqjwAgmjKmyQMUBVH/9Akw2q0tPo4Im/A2NTZ5BTAVoAAAAASUVORK5CYII=' alt='image' style='width: 25px; height: 25px; margin-right: 5px;'>
-                                                " . htmlspecialchars(ucfirst(strtolower($tableName))) . " - $areaNamesString
-                                            </a>
-                                        </li>";
-                                    }
-                                }
-                            } else {
-                                echo "<li>No tables found in the 'cities' database.</li>";
-                            }
-                            ?>
+            // If valid area names exist, display them
+            if (count($areaNames) > 0) {
+                // Convert the area names array into a comma-separated string
+                $areaNamesString = implode(', ', $areaNames);
+
+                // Display the city name with its associated area names
+                echo "<li class='m-2'>
+                        <a href='?table=" . urlencode($tableName) . "'>
+                            <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADoUlEQVR4nO2ab2hNYRzHP0P5kzQLS9NkLXshJV7wQivyZolSRpR/L7aMlT8JL3jByKK9EMrYWpkopZjixUr+lKIxpS0Km0LkT/7N8idXT33v7XH+3Ht379ndPbNffev5Pc9zzvl+7nnOc55zzoWhSBgzgM3ALoc2AdMJSSwHfgERH/0AyjJlJh/Y4fGLxtNKbftAhhuBWoea1XYzUyCH4vyi8ZRvgTR4gJyJAzIc2OqxzT5gSqogdTrgRaBN5bNAp8qngC6VjwJvVS5MY2jNibPNgXRBKoEmlY3ByyovBG6rPAvosECiF3u1x/AzE0CJzzFzgHUe22wDJqrPJKBGZ2o/kNffIP0VGx1nav1AgWwB6lPQCaAYGA2sla81wMiBABmX4gQSkQ4nMp0pkDz1eQeU90H12q4u20BeAMOAI8CFODoPzJOHrAUpSnI4NWY7SLHKT4FFuhFGgHvK9ylvGigQU9dq6WACkHa1zVd+TfnygQZx6k9YQRZrqWHUo7pQghRa+/j6P4H8AJ4Br5T3KH8TNpBEagoLSKfuKSus55QirZJDBTJorpH2IZDBfkZKgc8es0Y2zVoRS5/l2RV71OE78BHozRDIbx3vi/Kfyr95gPSq7bty49kVtWqsTnNozQTGS1Ez0bwooKFVrdx4dsVxx8N8UItGL6ULskH5MS+QqNnyNEFeaInhpa6AQMqtNldcUGNZALPWaA0jp2YHBFKm3Hh2xVU1lgYAcqcPQyuVJUqpcuPZFbfUONsBYl5VXlF5pw4U0YuydpVXAc8tkBq9ZnXqYZrTb528Rc+s8eyK+2oscYD0VYWaoeZ4aIEHSI8gH1v3hzZdU34gJcqNZ1c8UWOBA6TT8Qzup28WyIN+nrUKlBvPrnipxlyPaySZsK+RHT6wNwICyVVuPLvikxpHBABSoFc6Ti0LCGSEcuPZFb+0BCAAkEf9PLSQV+P5nxilju8DAqnweQV6yQOkSze4vRZYuXV8P5D3qjPeYzFBld0BgfiFvWicluQs2OAD0q064z0WU1XZkUGQHJ2FeN9ETupm6wUSPZ7xHosZqrwLjNXCsVV1zdpRIr1W/91x+mxTnw9J7rNSin4JbpW3sfIakfdYzFXldWB7ijfCTGq7vEbkPRYLVdkCTNaypDZLdUAeW+TZeI/FUlWeIzxxXp6X2JWrrW/nYYnT1oI1FhWqbMuCoVObpKJ/YqjwAgmjKmyQMUBVH/9Akw2q0tPo4Im/A2NTZ5BTAVoAAAAASUVORK5CYII=' alt='image' style='width: 25px; height: 25px; margin-right: 5px;'>
+                            " . htmlspecialchars(ucfirst(strtolower($tableName))) . " - $areaNamesString
+                        </a>
+                    </li>";
+            }
+        }
+    }
+} else {
+    echo "<li>No tables found in the 'cities' database.</li>";
+}
+?>
+
+
+
                         </ul>
                     </div>
                 </div>

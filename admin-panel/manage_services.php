@@ -107,7 +107,7 @@ if ($coni->connect_error) {
                         $tableName = $tableRow['Tables_in_' . $dbname];  // Table name (e.g., 'nagpur')
 
                         // Query to fetch data from each table
-                        $sql2 = "SELECT * FROM `$tableName` ORDER BY `created_at` DESC";
+                        $sql2 = "SELECT * FROM `$tableName` ORDER BY `id` DESC";
                         $que2 = mysqli_query($coni, $sql2);
 
                         // Check if the query was successful
@@ -137,15 +137,15 @@ if ($coni->connect_error) {
                                             </div>
                                             <div class='blogitem-content p-3'>
                                                 <h5><a href='../services.php?id=" . htmlspecialchars($row2['id']) . "' class='service-title'>" . htmlspecialchars($row2['area_name']) . "</a></h5>
-                                                <p class='text-muted'>" . htmlspecialchars(substr($row2['created_at'], 0, 150)) . "...</p>
-                                                <h6 class='service-description'>" . htmlspecialchars(substr($row2['service'], 0, 150)) . "...</h6>
+                                                <p class='text-muted'>" . htmlspecialchars(substr($row2['publish_date'], 0, 150)) . "</p>
+                                                <h6 class='service-description'>" . htmlspecialchars(substr($row2['service'], 0, 150)) . "</h6>
                                                 <p class='service-title'>" . htmlspecialchars(substr($row2['service_title'], 0, 150)) . "...</p>
                                                 <div class='d-flex justify-content-between'>
-                                                    <a href='../services.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "&created_at=" . urlencode($row2['created_at']) . "' class='btn btn-info btn-sm'>Read More</a>
+                                                    <a href='../services.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "' class='btn btn-info btn-sm'>Read More</a>
                                                     <a href='del_service.php?db=cities&table=" . urlencode($tableName) . "&id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "' 
                                                        class='btn btn-danger btn-sm' 
                                                        onclick='return confirm(\"Are you sure you want to delete this service?\");'>Delete</a>
-                                                    <a href='toggle_service.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "&created_at=" . urlencode($row2['created_at']) . "&table=" . urlencode($tableName) . "' 
+                                                    <a href='toggle_service.php?id=" . htmlspecialchars($row2['id']) . "&service=" . urlencode($row2['service']) . "&table=" . urlencode($tableName) . "' 
    class='btn btn-sm toggle-service' data-service-id='" . htmlspecialchars($row2['id']) . "' 
    style='background-color: " . ($row2['is_enabled'] == 1 ? '#28a745' : '#FD0D0D') . "; color: white;'>
     " . ($row2['is_enabled'] == 1 ? 'Disable' : 'Enable') . "
@@ -171,6 +171,16 @@ if ($coni->connect_error) {
 
                     $coni->close();
                     ?>
+
+                    <style>
+                        .service-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 3; /* Limit to 4 lines */
+    text-overflow: ellipsis; /* Show "..." if text exceeds 4 lines */
+}
+                    </style>
 
                     <?php if (isset($_SESSION['message'])): ?>
                         <div class="alert alert-info">
